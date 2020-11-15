@@ -1,0 +1,20 @@
+/*
+Style For Widget Form
+*/
+ul.list-checkbox li ul{
+    margin-top: 6px;
+}
+ul.list-checkbox li ul.children li
+{
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+    margin-left: 5px;
+    position: relative;
+}
+ul.list-checkbox li ul.children li:before{
+    position: absolute;
+    content: "__";
+    left: 0px;
+    top: -5px;
+    color: rgb(221, 221, 221);
+}

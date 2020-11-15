@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 34" width="31" height="34">
+	<defs>
+		<image width="31" height="34" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAiCAMAAACQlPJ4AAAAAXNSR0IB2cksfwAAASNQTFRF////1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMp1iMpXek8LgAAAGF0Uk5TADRLDo//5DZz9VBU/vxlO/dHJuyzAdLPGdYD4tvptiDXdhLCLxT63ICEGvP9IaSwSjexAvmHg2TTBwQfWi4V0YJbZgrFogaZrL0PDKa5BdTZyG86iqpi+3nyemfroM6oVS/a72cAAAEgSURBVHicddPZVsIwEAbgogy4tIporRRFQFFR3EFBRVRwQ9wXXNH3fwrbJmEKnfmv5sx30k6SE01jEhoY5MhNGCAS5XkInAyPcDyquw7GGM3jMRDRJyiOT4LKFMHmdJfBInwGGRKE20n0Wer/obmup8j559PKM/QGswvSF2nXckseLzOsrYjleYZX1zwurDO+IZZvMrwlp9tmhosI3qF5NyW4GKe9JL++R/O+5HIFewfRQ1UeGYJjVeTjGhROTK88lQxnyPWG2zi/cMqMLvkS2b4SrevmTUvd2+0delg17x9U9eh7G08QiJVFfjYC3Gj6tvsS4Ne6/zje+rT9bvYcl93q4XTgzswS6sdnpZ+dfLWFfudzhDqp/nSszu8ftfYfGbgc6gO2yMYAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<g id="Layer 1 copy">
+		<g id="&lt;Group&gt;">
+			<use id="&lt;Group&gt;" href="#img1" x="0" y="0" />
+		</g>
+	</g>
+</svg>

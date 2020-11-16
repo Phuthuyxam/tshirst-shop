@@ -72,5 +72,72 @@ class Woocomerce_extension
         return $allProductTerm;
     }
 
+    // load Recommended product
+    public function getRecommendedProduct($productId) {
+        if(isset($_COOKIE['recommendedProduct'])) {
+            $loadProduct = $_COOKIE['recommendedProduct'];
+            try {
+                $products = json_decode($loadProduct, true);
+                if(!in_array($productId, $products)) {
+                    if(count($products) == 5) unset($products[4]);
+                    $products[] = $productId;
+                    setcookie('recommendedProduct', json_encode($products) , time() + (86400 * 15), "/");
+                }
+
+            } catch ( \Exception $e ) {
+
+            }
+
+        }else {
+            setcookie('recommendedProduct', json_encode([$productId]) , time() + (86400 * 15), "/");
+        }
+        return $_COOKIE['recommendedProduct'];
+
+//        setcookie('recommendedProduct', null, -1, '/');
+    }
+
+    public function renderRecommendedProduct() {
+        $productJson = $_COOKIE['recommendedProduct'];
+        $recommendProducts = [];
+        try {
+            $viewedProducts = json_decode($productJson);
+            if(isset($viewedProducts) && !empty($viewedProducts)) {
+                $terms = [];
+                foreach ($viewedProducts as $pro) {
+                    $getTerm = get_the_terms($pro , 'product_cat', OBJECT , 'raw');
+                    $terms[] = $getTerm[0]->term_id;
+                }
+                $terms = array_unique($terms);
+                $query = new WP_Query(
+                    [
+                        'post_type' => 'product',
+                        'post_status' => 'publish',
+                        'posts_per_page' => 6,
+                        'tax_query' => array(
+                            array(
+                                'taxonomy' => 'product_cat',
+                                'field'    => 'term_id',
+                                'terms'    => $terms,
+                            ),
+                        ),
+                        'orderby' => 'rand',
+                    ]
+                );
+
+                if($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        $recommendProducts[] = get_the_ID();
+                    }
+                }
+                wp_reset_query();
+            }
+        } catch ( \Exception $e ) {
+
+        }
+
+        return $recommendProducts;
+    }
+
 }
 $GLOBALS['wooextension'] = new Woocomerce_extension();

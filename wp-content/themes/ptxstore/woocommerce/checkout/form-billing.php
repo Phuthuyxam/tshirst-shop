@@ -39,9 +39,19 @@ defined( 'ABSPATH' ) || exit;
 			woocommerce_form_field( $key, $field, $checkout->get_value( $key ) );
 		}
 		?>
-	</div>
 
+	</div>
+    <?php
+    $checkoutField = $checkout->get_checkout_fields();
+    if(isset($checkoutField['billing']['billing_country']) && !empty($checkoutField['billing']['billing_country'])) :
+        ?>
+        <span>
+            Country: Algeria (Change)
+        </span>
+    <?php endif; ?>
 	<?php do_action( 'woocommerce_after_checkout_billing_form', $checkout ); ?>
+
+
 </div>
 
 <?php if ( ! is_user_logged_in() && $checkout->is_registration_enabled() ) : ?>

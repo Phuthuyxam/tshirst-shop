@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
         jQuery(this).parents('.menu-box').css('width', '0');
     });
 
-    if ($(window).width() < 992) {
+    if (jQuery(window).width() < 992) {
         jQuery('.main-menu li.menu-item-has-children>a>i').click(function(e) {
             e.preventDefault();
             jQuery(this).parent().parent().children('.sub-menu').slideToggle('fast');
@@ -30,11 +30,10 @@ jQuery(document).ready(function() {
         jQuery('#search').addClass('active');
     })
 
-    $("body").on('click', function(e) {
-        console.log(e.target);
-        if (!$(e.target).hasClass('search-input') && !$(e.target).hasClass('search-wrapper') &&
-            !$(e.target).hasClass('search') && !$(e.target).hasClass('icon-search') && !$(e.target).hasClass('label-search') && !$(e.target).hasClass('search-mobile-icon')) {
-            $('#search').blur();
+    jQuery("body").on('click', function(e) {
+        if (!jQuery(e.target).hasClass('search-input') && !jQuery(e.target).hasClass('search-wrapper') &&
+            !jQuery(e.target).hasClass('search') && !jQuery(e.target).hasClass('icon-search') && !jQuery(e.target).hasClass('label-search') && !jQuery(e.target).hasClass('search-mobile-icon')) {
+            jQuery('#search').blur();
             if (jQuery('#search').val() == ""){
                 jQuery(this).find('.label-search').removeClass('active');
             }
@@ -43,11 +42,15 @@ jQuery(document).ready(function() {
             jQuery(this).find('.line-bottom').hide();
             // jQuery(this).find('header').removeClass('active')
         }
-        if ($(e.target).hasClass('header')) {
+        if (jQuery(e.target).hasClass('header')) {
             jQuery(this).find(e.target).removeClass('active');
             jQuery(this).find('.search-wrapper').addClass('d-sm-none');
             jQuery(this).find('.search-wrapper').addClass('d-none');
         }
+        // console.log(e.target);
+        // if(!jQuery(e.target).hasClass('sort-option') && !jQuery(e.target).hasClass('sort-wrapper')){
+        //     jQuery(this).find('.sort-options').addClass('d-none');
+        // }
     })
 
     jQuery('#search').keyup(function(e) {
@@ -69,5 +72,28 @@ jQuery(document).ready(function() {
         jQuery(this).parents('header').find('.search-wrapper').removeClass('d-sm-none');
         jQuery(this).parents('header').find('.search-wrapper').removeClass('d-none');
         jQuery(this).parents('header').find('.label-search').addClass('active');
+    })
+
+    jQuery('.filter-title').click(function(){
+        jQuery(this).toggleClass('active');
+        jQuery(this).find('.expand').toggleClass('d-none');
+        jQuery(this).find('.collapse').toggleClass('d-none');
+        jQuery(this).parents('.filter-item').find('.filter-content').slideToggle();
+    })
+    
+    jQuery('.show-more').click(function(){
+        jQuery(this).parents('ul').find('li.hide').removeClass('d-none');
+        jQuery(this).addClass('d-none');
+        jQuery(this).parents('ul').find('li.show-less').removeClass('d-none');
+    })
+
+    jQuery('.show-less').click(function(){
+        jQuery(this).parents('ul').find('li.hide').addClass('d-none');
+        jQuery(this).addClass('d-none');
+        jQuery(this).parents('ul').find('li.show-more').removeClass('d-none');
+    })
+
+    jQuery('.sort-wrapper').click(function(){
+        jQuery(this).find('.sort-options').removeClass('d-none');
     })
 });

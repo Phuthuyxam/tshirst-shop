@@ -1,0 +1,23 @@
+<?php
+require_once 'configs/configs.php';
+require_once __THEME_PATH.'/inc/includes/systems/wp_menu_bootstrap.php';
+require_once __THEME_PATH.'/inc/includes/systems/class-tgm-plugin-activation.php';
+require_once __THEME_PATH.'/inc/configs/plugins.php';
+require_once __THEME_PATH.'/inc/configs/theme-options.php';
+require_once __THEME_PATH.'/inc/admin/theme-options.php';
+require_once __THEME_PATH.'/inc/includes/systems/compression_html.class.php';
+require_once __THEME_PATH.'/inc/includes/systems/header_cleaner.php';
+require_once __THEME_PATH.'/inc/includes/globals/functions_global.php';
+require_once __THEME_PATH.'/inc/includes/globals/shortcodes.php';
+require_once __THEME_PATH.'/inc/includes/woocommerce/functions_woocommerce.php';
+require_once __THEME_PATH.'/inc/configs/post_type.php';
+require_once __THEME_PATH.'/inc/configs/taxonomy.php';
+require_once __THEME_PATH.'/inc/includes/globals/register_actions.php';
+require_once __THEME_PATH.'/inc/configs/menus.php';
+require_once __THEME_PATH.'/inc/configs/thumbnails.php';
+require_once __THEME_PATH.'/inc/configs/enqueue.php';
+require_once __THEME_PATH.'/inc/configs/widgets.php';
+require_once __THEME_PATH.'/inc/includes/systems/custom_admin.php';
+require_once __THEME_PATH.'/inc/configs/admin_menu.php';
+require_once __THEME_PATH.'/inc/classes/Woocomerce_setup.php';
+require_once __THEME_PATH.'/inc/classes/Woocomerce_extension.php';

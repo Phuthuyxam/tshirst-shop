@@ -77,7 +77,7 @@ function pveser_woocommerce_breadcrumbs() {
     );
 }
 
-add_filter( 'woocommerce_breadcrumb_defaults', 'my_woocommerce_breadcrumbs' );
+//add_filter( 'woocommerce_breadcrumb_defaults', 'my_woocommerce_breadcrumbs' );
 
 //add_filter ( 'woocommerce_product_thumbnails_columns', 'xx_thumb_cols' );
 function xx_thumb_cols() {
@@ -246,4 +246,10 @@ function pveser_related_product($number, $title='Sản phẩm liên quan')
 }
 
 //add_action('woocommerce_after_single_product_summary', 'pveser_related_product', 12);
+
+remove_action( 'woocommerce_shop_loop_item_title','woocommerce_template_loop_product_title', 10 );
+add_action('woocommerce_shop_loop_item_title', 'abChangeProductsTitle', 10 );
+function abChangeProductsTitle() {
+    echo '<h3 class="fs-sm">' . get_the_title() . '</h3>';
+}
 ?>

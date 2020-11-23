@@ -19,4 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<ul class="products columns-<?php echo esc_attr( wc_get_loop_prop( 'columns' ) ); ?>">
+<!--<div class="products">-->
+<!--<div class="products col-lg-4 col-xl-4 col-6 col-mobile">-->
+

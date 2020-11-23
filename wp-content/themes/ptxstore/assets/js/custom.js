@@ -48,9 +48,17 @@ jQuery(document).ready(function() {
             jQuery(this).find('.search-wrapper').addClass('d-none');
         }
         // console.log(e.target);
-        // if(!jQuery(e.target).hasClass('sort-option') && !jQuery(e.target).hasClass('sort-wrapper')){
-        //     jQuery(this).find('.sort-options').addClass('d-none');
-        // }
+        if(!jQuery(e.target).hasClass('sort-option') && !jQuery(e.target).hasClass('sort-overlay')){
+            jQuery(this).find('.sort-options').addClass('d-none');
+        }
+
+        if(!jQuery(e.target).hasClass('products-select-overlay')) {
+            jQuery(this).find('.product-options').hide();
+        }
+
+        if(!jQuery(e.target).hasClass('products-quantity-select-overlay')) {
+            jQuery(this).find('.quantity-options').hide();
+        }
     })
 
     jQuery('#search').keyup(function(e) {
@@ -72,6 +80,11 @@ jQuery(document).ready(function() {
         jQuery(this).parents('header').find('.search-wrapper').removeClass('d-sm-none');
         jQuery(this).parents('header').find('.search-wrapper').removeClass('d-none');
         jQuery(this).parents('header').find('.label-search').addClass('active');
+    })
+
+    jQuery('.filter-content ul li').click(function(){
+        jQuery(this).parent().find('li').removeClass('active');
+        jQuery(this).addClass('active');
     })
 
     jQuery('.filter-title').click(function(){
@@ -96,4 +109,81 @@ jQuery(document).ready(function() {
     jQuery('.sort-wrapper').click(function(){
         jQuery(this).find('.sort-options').removeClass('d-none');
     })
+
+    jQuery('.product-types-list ul li').click(function(){
+        jQuery(this).parent().find('li').removeClass('active');
+        jQuery(this).addClass('active');
+        jQuery(this).parents('.product-wrapper').find('.product-image img').attr("src",jQuery(this).find('img').attr('src'));
+        jQuery(this).parents('.product-wrapper').find('.product-title .type').text(jQuery(this).data('name'));
+    })
+
+    jQuery('.product-size-select ul li').click(function(){
+        jQuery(this).parent().find('li').removeClass('active');
+        jQuery(this).addClass('active');
+        jQuery(this).parents('.product-size-select').find('.placeholder').addClass('d-none');
+        jQuery(this).parents('.product-size-select').find('.size').text(jQuery(this).text());
+    })
+
+    jQuery('.product-color-select ul li').click(function(){
+        jQuery(this).parent().find('li').removeClass('active');
+        jQuery(this).addClass('active');
+        jQuery(this).parents('.product-color-select').find('.color').text(jQuery(this).data('name'));
+    })
+
+    jQuery('.product-quantity-select button.plus').click(function(){
+        var val = jQuery(this).parents('.product-quantity-select').find('.quantity').text();
+        jQuery(this).parents('.product-quantity-list').find('.quantity').text(parseInt(val) + 1);
+        jQuery(this).parents('.product-quantity-select').find('.minus').removeClass('disabled');
+    })
+
+    jQuery('.product-quantity-select button.minus').click(function(){
+        var val = jQuery(this).parents('.product-quantity-select').find('.quantity').text();
+        if (val > 1){
+            jQuery(this).parents('.product-quantity-list').find('.quantity').text(parseInt(val) - 1);
+        }else{
+            jQuery(this).addClass('disabled');
+            jQuery(this).parents('.product-quantity-list').find('.quantity').text(1);
+        }
+    })
+
+    jQuery('.category-side-layout').click(function(){
+        jQuery(this).parents('.category-side-content').css('width','0');
+        jQuery(this).parents('.category-side-content').addClass('animate__slideOutRight');
+        jQuery(this).parents('.category-side-content').removeClass('animate__slideInRight');
+    })
+
+    jQuery('.category-filter-title').click(function(){
+        jQuery(this).parents('body').find('.category-side-content').css('width','100%');
+        jQuery(this).parents('body').find('.category-side-content').addClass('animate__animated animate__slideInRight');
+        jQuery(this).parents('body').find('.category-side-content').removeClass('animate__slideOutRight');
+
+    })
+
+    jQuery('.btn-done').click(function(){
+        jQuery(this).parents('.category-side-content').find('.category-side-layout').trigger('click');
+    })
+
+    jQuery('.category-filter-reset').click(function(){
+        jQuery(this).parents('.category-side-content').find('li').removeClass('active');
+    })
+
+    jQuery('.category-side-body li').each(function(){
+        if (jQuery(this).hasClass('active')){
+            jQuery('.category-filter-reset').show();
+        }
+    })
+
+    jQuery("#zoom_03").elevateZoom({gallery:'gal1', cursor: 'pointer', galleryActiveClass: 'active', imageCrossfade: true}); 
+   
+    jQuery('.products-select').click(function(){
+        jQuery(this).parent().find('.product-options').show();
+    }) 
+    
+    jQuery('.products-select.quantity-select').click(function(){
+        jQuery(this).parent().find('.quantity-options').show();
+    }) 
 });
+
+function buildUrl(id,color,size) {
+    var url = window.location.origin+'/wp-json/api/v1/get-woocomerce-product?productId='+id+'&pa_color='+color+'&pa_size'+size;
+}

@@ -24,44 +24,98 @@ if ( empty( $product ) || ! $product->is_visible() ) {
 	return;
 }
 ?>
-<li <?php wc_product_class( '', $product ); ?>>
 	<?php
-	/**
-	 * Hook: woocommerce_before_shop_loop_item.
-	 *
-	 * @hooked woocommerce_template_loop_product_link_open - 10
-	 */
-	do_action( 'woocommerce_before_shop_loop_item' );
-
-	/**
-	 * Hook: woocommerce_before_shop_loop_item_title.
-	 *
-	 * @hooked woocommerce_show_product_loop_sale_flash - 10
-	 * @hooked woocommerce_template_loop_product_thumbnail - 10
-	 */
-	do_action( 'woocommerce_before_shop_loop_item_title' );
-
-	/**
-	 * Hook: woocommerce_shop_loop_item_title.
-	 *
-	 * @hooked woocommerce_template_loop_product_title - 10
-	 */
-	do_action( 'woocommerce_shop_loop_item_title' );
-
-	/**
-	 * Hook: woocommerce_after_shop_loop_item_title.
-	 *
-	 * @hooked woocommerce_template_loop_rating - 5
-	 * @hooked woocommerce_template_loop_price - 10
-	 */
-	do_action( 'woocommerce_after_shop_loop_item_title' );
-
-	/**
-	 * Hook: woocommerce_after_shop_loop_item.
-	 *
-	 * @hooked woocommerce_template_loop_product_link_close - 5
-	 * @hooked woocommerce_template_loop_add_to_cart - 10
-	 */
-	do_action( 'woocommerce_after_shop_loop_item' );
+//	/**
+//	 * Hook: woocommerce_before_shop_loop_item.
+//	 *
+//	 * @hooked woocommerce_template_loop_product_link_open - 10
+//	 */
+//	do_action( 'woocommerce_before_shop_loop_item' );
+//
+//	/**
+//	 * Hook: woocommerce_before_shop_loop_item_title.
+//	 *
+//	 * @hooked woocommerce_show_product_loop_sale_flash - 10
+//	 * @hooked woocommerce_template_loop_product_thumbnail - 10
+//	 */
+//	do_action( 'woocommerce_before_shop_loop_item_title' );
+//
+//	/**
+//	 * Hook: woocommerce_shop_loop_item_title.
+//	 *
+//	 * @hooked woocommerce_template_loop_product_title - 10
+//	 */
+//	do_action( 'woocommerce_shop_loop_item_title' );
+//
+//	/**
+//	 * Hook: woocommerce_after_shop_loop_item_title.
+//	 *
+//	 * @hooked woocommerce_template_loop_rating - 5
+//	 * @hooked woocommerce_template_loop_price - 10
+//	 */
+//	do_action( 'woocommerce_after_shop_loop_item_title' );
+//
+//	/**
+//	 * Hook: woocommerce_after_shop_loop_item.
+//	 *
+//	 * @hooked woocommerce_template_loop_product_link_close - 5
+//	 * @hooked woocommerce_template_loop_add_to_cart - 10
+//	 */
+//	do_action( 'woocommerce_after_shop_loop_item' );
 	?>
-</li>
+
+<div class="products col-lg-4 col-xl-4 col-6 col-mobile">
+    <div class="item-wrapper">
+        <a href="#">
+            <div class="item-thumb">
+                <?php
+                $image_size = apply_filters( 'single_product_archive_thumbnail_size', $size );
+                echo $product ? $product->get_image( $image_size ) : '';
+                ?>
+            </div>
+            <div class="item-content">
+                <div class="item-title">
+
+
+                        <?php do_action( 'woocommerce_shop_loop_item_title' ); ?>
+
+                    </h3>
+                </div>
+                <div class="item-attribute">
+                    <div class="item-price">
+                            <?php
+                            if($product->is_type( 'variable' )) {
+                                $variableProductId = $product->get_available_variations()[0]['variation_id'];
+                                $variableProduct = new WC_Product_Variation($variableProductId);
+                                $regularPrice = $variableProduct->get_regular_price();
+                                $salePrice = $variableProduct->get_sale_price();
+                            }else{
+                                $regularPrice = $product->get_regular_price();
+                                $salePrice = $product->get_sale_price();
+                            }
+                            if(isset($salePrice) && !empty($salePrice)):
+                                ?>
+                                <span class="price fs-md"><?php echo get_woocommerce_currency_symbol() . $salePrice ?></span>
+                                <span class="small-price fs-xs "><?php echo get_woocommerce_currency_symbol() . $regularPrice ?></span>
+                            <?php else: ?>
+                                <span class="price fs-md"><?php echo get_woocommerce_currency_symbol() . $regularPrice ?></span>
+                            <?php endif; ?>
+                    </div>
+                    <div class="item-colors">
+                        <span class="fs-xs">
+                            <?php
+                            $color = wc_get_product_terms( $product_id, 'pa_color' );
+                            if(count($color) > 0) {
+                                echo count($color) . " color";
+                            }
+                            ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <div class="btn-add-cart">
+            <button class="btn btn-primary fw-bold" data-toggle="modal" data-target="#productModal">Add to cart</button>
+        </div>
+    </div>
+</div>

@@ -16,9 +16,10 @@ add_action( 'wp_enqueue_scripts', 'pveser_theme_styles' );
 
 function pveser_theme_scripts()
 {
-//	wp_enqueue_script('fancybox', __THEME_HOST.'/assets/js/laibrary/jquery.fancybox.min.js', array(), false, true);
+	wp_enqueue_script('fancybox', __THEME_HOST.'/assets/js/jquery.elevateZoom-3.0.8.min.js', array(), false, true);
 	wp_enqueue_script('bootstrap-js', __THEME_HOST.'/assets/js/bootstrap.min.js', array(), false, true);
 	wp_enqueue_script('custom', __THEME_HOST.'/assets/js/custom.js', array(), false, true);
+    wp_enqueue_script('custom-woo', __THEME_HOST.'/assets/js/page/archivewoo.js', array(), false, true);
 }
 add_action( 'wp_enqueue_scripts', 'pveser_theme_scripts' );
 ?>

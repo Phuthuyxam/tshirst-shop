@@ -5,6 +5,9 @@ class Woocomerce_setup
 {
     public function __construct(){
         add_action( 'init', [$this,'addTaxonomy'] );
+
+        add_action( 'init', [$this,'addTaxonomyClassProduct'] );
+
         add_filter( 'woocommerce_checkout_fields', [$this, 'checkoutField'] );
         // add field
         add_action( 'woocommerce_billing_fields',[$this, 'custom_woocommerce_billing_fields'] );
@@ -54,6 +57,28 @@ class Woocomerce_setup
         register_taxonomy('ptx_product_type', 'product', $args);
     }
 
+    public function addTaxonomyClassProduct() {
+        $labels = array(
+            'name' => 'Lớp sản phẩm',
+            'singular' => 'Lớp sản phẩm',
+            'menu_name' => 'Lớp sản phẩm'
+        );
+
+        $args = array(
+            'labels'                     => $labels,
+            'hierarchical'               => true,
+            'public'                     => true,
+            'show_ui'                    => true,
+            'show_admin_column'          => true,
+            'show_in_nav_menus'          => true,
+            'show_tagcloud'              => true,
+            'rewrite' => array(
+                'slug' => 'lop-san-pham'
+            ),
+        );
+
+        register_taxonomy('ptx_product_class', 'product', $args);
+    }
     // setup checkout field
     public function checkoutField($fields) {
         /**

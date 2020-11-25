@@ -110,24 +110,89 @@ jQuery(document).ready(function() {
         jQuery(this).find('.sort-options').removeClass('d-none');
     })
 
-    jQuery('.product-types-list ul li').click(function(){
-        jQuery(this).parent().find('li').removeClass('active');
-        jQuery(this).addClass('active');
-        jQuery(this).parents('.product-wrapper').find('.product-image img').attr("src",jQuery(this).find('img').attr('src'));
-        jQuery(this).parents('.product-wrapper').find('.product-title .type').text(jQuery(this).data('name'));
+    jQuery('body').on('click', '.product-types-list ul li' , function(){
+
+        var id = jQuery(this).attr("data-id");
+        var url = window.location.origin+'/wp-json/api/v1/get-woocomerce-product?productId='+id;
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                result = JSON.parse(result);
+                setColorList(result,jQuery('#productModal').find('.product-color-select'));
+                setListSize(result[0],jQuery('.product-size-select ul'));
+                setQuantity(result[0],jQuery('#productModal').find('.product-quantity-list'));
+                setPrice(result[0],jQuery('#productModal').find('.product-price'));
+                jQuery(this).parent().find('li').removeClass('active');
+                jQuery(this).addClass('active');
+                jQuery(this).parents('.product-wrapper').find('.product-image img').attr("src",jQuery(this).find('img').attr('src'));
+                jQuery(this).parents('.product-wrapper').find('.product-title .title').text(jQuery(this).data('name'));
+                jQuery('#inProduct').val(id);
+            }).catch(error => {
+            console.error(error);
+        });
+
+
     })
 
-    jQuery('.product-size-select ul li').click(function(){
+    jQuery('.view-detail a').click(function (event) {
+        event.preventDefault();
+
+        var url = jQuery('.product-types-list ul .active').attr('data-url');
+
+        window.location.href = url;
+
+    })
+
+    jQuery('body').on('click', '.product-size-select ul li', function(){
         jQuery(this).parent().find('li').removeClass('active');
         jQuery(this).addClass('active');
         jQuery(this).parents('.product-size-select').find('.placeholder').addClass('d-none');
         jQuery(this).parents('.product-size-select').find('.size').text(jQuery(this).text());
+        setValueInput();
     })
 
-    jQuery('.product-color-select ul li').click(function(){
+    jQuery('body').on('click','.product-color-select ul li',function(){
         jQuery(this).parent().find('li').removeClass('active');
         jQuery(this).addClass('active');
         jQuery(this).parents('.product-color-select').find('.color').text(jQuery(this).data('name'));
+        var key = jQuery(this).data('key');
+        // fetch('http://localhost/tshirt/tshirt-shop/fakedata.json')
+        //     .then(response => response.json())
+        //     .then(result => {
+        //         setImage(result[key],jQuery('#productModal').find('.product-image img'));
+        //         setPrice(result[key],jQuery('#productModal').find('.product-price'))
+        //     }).catch(error => {
+        //         console.error(error);
+        //     });
+
+        setValueInput();
+
+
+
+    })
+
+    jQuery('.btn-add-card').click(function () {
+        var productId = jQuery('.product-types-list ul .active').attr('data-id');
+        var variableProduct = jQuery('#inVariable').val();
+        var quatity = jQuery('#inQty').val();
+        var url = window.location.origin+'/wp-json/api/v1/ptx-woocomerce-add-to-cart';
+
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                'pid' : productId,
+                'vid' : variableProduct,
+                'qty' : quatity
+            },
+            dataType: 'html',
+            success: function (data){
+                console.log(data);
+            },
+        });
+
+
+
     })
 
     jQuery('.product-quantity-select button.plus').click(function(){
@@ -173,8 +238,15 @@ jQuery(document).ready(function() {
         }
     })
 
-    jQuery("#zoom_03").elevateZoom({gallery:'gal1', cursor: 'pointer', galleryActiveClass: 'active', imageCrossfade: true}); 
-   
+    if(jQuery('#zoom_03').length > 0) {
+        jQuery("#zoom_03").elevateZoom({
+            gallery: 'gal1',
+            cursor: 'pointer',
+            galleryActiveClass: 'active',
+            imageCrossfade: true
+        });
+    }
+
     jQuery('.products-select').click(function(){
         jQuery(this).parent().find('.product-options').show();
     }) 
@@ -182,8 +254,174 @@ jQuery(document).ready(function() {
     jQuery('.products-select.quantity-select').click(function(){
         jQuery(this).parent().find('.quantity-options').show();
     }) 
+
+    jQuery('.btn-save-changes').click(function(){
+        jQuery(this).parents('.product-wrapper').removeClass('active');
+        jQuery(this).parents('.product-wrapper').next().addClass('active');
+        jQuery('#bundleModalLabel').find('.item .current').text(jQuery(this).parents('.product-wrapper').next().data('order'));
+    })
+    jQuery('.quantity-options ul li').click(function(){
+        jQuery(this).parents('.products-quantity-select').find('span.quantity').text(jQuery(this).data('value'));
+        jQuery(this).parent().find('li').removeClass('active');
+        jQuery(this).addClass('active');
+    })
+
+    var count = 0;
+    jQuery('.product-nav .next').click(function(){
+        count++;
+        var total = jQuery(this).parents('.product-image-wrapper').find('.product-image-list a').length;
+        if (count == total){
+            jQuery(this).parents('.product-image-wrapper').find('.product-image-list a').each(function(){
+                if (jQuery(this).data('order') == 1) {
+                    jQuery(this).trigger('click');
+                }
+            })
+            count = 0;
+        }else {
+            var next = jQuery(this).parents('.product-image-wrapper').find('.product-image-list a.active').next();
+            next.trigger('click');
+        }
+    })
+
+    jQuery('.product-nav .prev').click(function(){
+        var total = jQuery(this).parents('.product-image-wrapper').find('.product-image-list a').length;
+        if (count == 0){
+            jQuery(this).parents('.product-image-wrapper').find('.product-image-list a').each(function(){
+                if (jQuery(this).data('order') == total) {
+                    jQuery(this).trigger('click');
+                }
+            })
+            count = total;
+        }else {
+            var prev = jQuery(this).parents('.product-image-wrapper').find('.product-image-list a.active').prev();
+            prev.trigger('click');
+            count--;
+        }
+    })
+
+    jQuery('.owl-carousel').owlCarousel({
+        loop:true,
+        margin:10,
+        nav:true,
+        items:1,
+        navText: ["<i class='fa fa-angle-left'></i>","<i class='fa fa-angle-right'></i>"]
+    })
+
+    jQuery('.btn-add-cart button').click(function(){
+
+        var dataProduct = jQuery(this).attr('data-product');
+        var productId = jQuery(this).attr('data-id');
+        if(!dataProduct){
+            window.location.href = jQuery(this).attr('data-addcart');
+        }else{
+            // // data-toggle="modal" data-target="#productModal"
+            var images = JSON.parse(dataProduct);
+            var url = window.location.origin+'/wp-json/api/v1/get-woocomerce-product?productId='+productId;
+            fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    result = JSON.parse(result);
+                    setColorList(result,jQuery('#productModal').find('.product-color-select'));
+                    setListSize(result[0],jQuery('.product-size-select ul'));
+                    setQuantity(result[0],jQuery('#productModal').find('.product-quantity-list'));
+                    setPrice(result[0],jQuery('#productModal').find('.product-price'));
+                    // setImage(images[0],jQuery('#productModal').find('.product-image img'));
+                    setListImages(images, jQuery('.product-types-list ul'));
+                    setValueInput();
+                    jQuery('#productModal').modal('show');
+
+                }).catch(error => {
+                console.error(error);
+            });
+
+
+        }
+    })
 });
 
-function buildUrl(id,color,size) {
-    var url = window.location.origin+'/wp-json/api/v1/get-woocomerce-product?productId='+id+'&pa_color='+color+'&pa_size'+size;
+function setValueInput() {
+    // set product id
+    var productId = jQuery('.product-types-list ul .active').attr('data-id');
+    var size = jQuery('.product-size-select ul .active').attr('data-name');
+    var color = jQuery('.product-color-select ul .active').attr('data-name');
+
+    if(productId.length > 0 && size.length > 0 && color.length > 0 ) {
+        var endpoint = buildUrl(productId, color, size);
+
+        fetch(endpoint)
+            .then(response => response.json())
+            .then(result => {
+                result = JSON.parse(result);
+                jQuery('#inVariable').val(result.variation_id);
+                setPrice(result,jQuery('#productModal').find('.product-price'));
+                setImage(result,jQuery('#productModal').find('.product-image img'));
+            }).catch(error => {
+            console.error(error);
+        });
+    }
 }
+
+function buildUrl(id,color,size) {
+    var url = window.location.origin+'/wp-json/api/v1/get-woocomerce-product?productId='+id+'&pa_color='+color+'&pa_size='+size;
+    return url;
+}
+
+function setColorList(data,parent){
+    var html = "";
+    data.forEach((value,key) => {
+        html += ` <li class="fw-bold `+(key == 0 ? 'active':'')+`" data-name="`+value.attributes.attribute_pa_color+`" data-key="`+key+`">
+                    <div class="color-circle">
+                        <div class="circle" style="background-color:`+ value.attributes.color_hex +`;"></div>
+                    </div>
+                </li>`;
+        if (key == 0){
+            parent.find('.product-color-title .color').text(value.attributes.attribute_pa_color);
+        }                       
+    })
+    parent.find('ul').html(html);
+}
+
+function setQuantity(data,parent){
+    parent.find('.quantity').text(data.min_qty);
+}
+
+function setPrice(data,parent) {
+    parent.find('.price').text(new Intl.NumberFormat().format(data.display_price));
+    parent.find('.small-price').text(new Intl.NumberFormat().format(data.display_regular_price));
+}
+
+function setListImages(data, parent) {
+    var html = "";
+    data.forEach(function (item, key) {
+        console.log(item);
+        html += `<li class="type-image-wrapper `+(key == 0 ? 'active':'')+`" data-name="`+ item.name +`" data-id="`+ item.id +`" data-url="`+ item.url +`">
+                    <div class="type-image">
+                        <img src="`+ item.image +`" alt="image cate list">
+                    </div>
+                </li>`;
+    });
+
+    parent.html(html);
+}
+
+function setListSize(data, parent) {
+    var html = "";
+    if(data.attributes.attribute_pa_size != null && data.attributes.all_size.length > 0) {
+        data.attributes.all_size.forEach(function (item, key) {
+
+            html += `<li class="fw-bold `+(key == 0 ? 'active':'')+`" data-name="`+ item.toLowerCase() +`">`+ item +`</li>`;
+        });
+    }
+
+    parent.html(html);
+}
+
+// function setImage(data,parent) {
+//     parent.attr('src',data.image);
+// }
+
+function setImage(data,parent) {
+    parent.attr('src',data.image.url);
+
+}
+

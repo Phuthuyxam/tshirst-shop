@@ -254,6 +254,11 @@ class Woocomerce_extension
             'methods' => 'GET',
             'callback' => [$this , 'apiGetVariableProduct'],
         ) );
+
+        register_rest_route( 'api/v1', '/ptx-woocomerce-add-to-cart', array(
+            'methods' => 'POST',
+            'callback' => [$this , 'apiAddToCart'],
+        ) );
     }
 
     public function apiGetVariableProduct( WP_REST_Request $request ) {
@@ -267,15 +272,97 @@ class Woocomerce_extension
 
             $allVariableProduct = $_product->get_available_variations();
 
-            foreach ($allVariableProduct as $vProduct) {
-                if( isset($vProduct['attributes']['attribute_pa_color']) && $vProduct['attributes']['attribute_pa_color'] == $color
-                    && isset($vProduct['attributes']['attribute_pa_size']) && $vProduct['attributes']['attribute_pa_size'] == $size ) {
-                    $result = $vProduct;
+            if(isset($color) && isset($size)){
+                foreach ($allVariableProduct as $vProduct) {
+
+                    if( ( isset($vProduct['attributes']['attribute_pa_color']) && $vProduct['attributes']['attribute_pa_color'] == $color && $vProduct['attributes']['attribute_pa_size'] == "" )
+                        || ( isset($vProduct['attributes']['attribute_pa_size']) && $vProduct['attributes']['attribute_pa_size'] == $size && $vProduct['attributes']['attribute_pa_color'] == "" )) {
+                        $result = $vProduct;
+                    }else{
+                        if( isset($vProduct['attributes']['attribute_pa_color']) && $vProduct['attributes']['attribute_pa_color'] == $color
+                            && isset($vProduct['attributes']['attribute_pa_size']) && $vProduct['attributes']['attribute_pa_size'] == $size ) {
+                            $result = $vProduct;
+                        }
+                    }
+
                 }
             }
+            else if (isset($productId)) {
+
+                foreach ($allVariableProduct as $key => $vProduct) {
+                    $term = get_term_by('slug', $vProduct['attributes']['attribute_pa_color'] , 'pa_color', OBJECT , 'raw');
+
+                    $colorHex = get_field('color_hex', 'pa_color_'.$term->term_id);
+                    $allVariableProduct[$key]['attributes']['color_hex'] = $colorHex;
+                    if(isset($vProduct['attributes']['attribute_pa_size']) && $vProduct['attributes']['attribute_pa_size'] == "" ) {
+                        $sizes = $_product->get_attribute('pa_size');
+                        $allSize = explode("," , str_replace(" ", "", $sizes));
+                        $allVariableProduct[$key]['attributes']['all_size'] = $allSize;
+                    }
+
+                }
+
+                $result = $allVariableProduct;
+
+            }
+
+
         }
         return json_encode($result);
         die();
+    }
+
+    public function apiAddToCart() {
+
+        $product_id = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['pid']));
+        $quantity = empty($_POST['quantity']) ? 1 : wc_stock_amount($_POST['qty']);
+        $variation_id = absint($_POST['vid']);
+        $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
+        $product_status = get_post_status($product_id);
+
+        WC()->cart = new WC_Cart();
+
+        
+        if ($passed_validation && WC()->cart->add_to_cart($product_id, $quantity, $variation_id) && 'publish' === $product_status) {
+
+            do_action('woocommerce_ajax_added_to_cart', $product_id);
+
+            if ('yes' === get_option('woocommerce_cart_redirect_after_add')) {
+                wc_add_to_cart_message(array($product_id => $quantity), true);
+            }
+
+            WC_AJAX :: get_refreshed_fragments();
+        } else {
+
+            $data = array(
+                'error' => true,
+                'product_url' => apply_filters('woocommerce_cart_redirect_after_error', get_permalink($product_id), $product_id));
+
+            echo wp_send_json($data);
+        }
+
+        wp_die();
+    }
+
+    public function genDataProductClass( $productId ) {
+
+        $productClass = get_the_terms($productId, 'ptx_product_class');
+        $productClass = $productClass[0];
+        $productClassData = [$productId];
+        $query = new WP_Query(['post_type' => 'product' , 'post_status' => 'publish', 'posts_per_page' => -1, 'post__not_in' => array($productId),'tax_query' => [ ['taxonomy' => 'ptx_product_class' , 'field' => 'term_id' , 'terms' => $productClass->term_id] ] ]);
+        if($query->have_posts()) {
+            while ($query->have_posts()){
+                $query->the_post();
+                $productClassData[] = get_the_ID();
+            }
+        }
+
+        $result = [];
+        foreach ( $productClassData as $id) {
+            $result[] = ['image' => get_the_post_thumbnail_url($id) , 'id' => $id , 'name' => get_the_title($id) , 'url' => get_the_permalink($id)];
+        }
+
+        return json_encode($result);
     }
 
 }

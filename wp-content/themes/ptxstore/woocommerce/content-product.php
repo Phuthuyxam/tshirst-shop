@@ -66,7 +66,7 @@ if ( empty( $product ) || ! $product->is_visible() ) {
 
 <div class="products col-lg-4 col-xl-4 col-6 col-mobile">
     <div class="item-wrapper">
-        <a href="#">
+        <a href="<?php echo get_permalink($product->get_id()) ?>">
             <div class="item-thumb">
                 <?php
                 $image_size = apply_filters( 'single_product_archive_thumbnail_size', $size );
@@ -75,10 +75,7 @@ if ( empty( $product ) || ! $product->is_visible() ) {
             </div>
             <div class="item-content">
                 <div class="item-title">
-
-
                         <?php do_action( 'woocommerce_shop_loop_item_title' ); ?>
-
                     </h3>
                 </div>
                 <div class="item-attribute">
@@ -104,7 +101,7 @@ if ( empty( $product ) || ! $product->is_visible() ) {
                     <div class="item-colors">
                         <span class="fs-xs">
                             <?php
-                            $color = wc_get_product_terms( $product_id, 'pa_color' );
+                            $color = wc_get_product_terms( $product->get_id(), 'pa_color' );
                             if(count($color) > 0) {
                                 echo count($color) . " color";
                             }
@@ -115,7 +112,11 @@ if ( empty( $product ) || ! $product->is_visible() ) {
             </div>
         </a>
         <div class="btn-add-cart">
-            <button class="btn btn-primary fw-bold" data-toggle="modal" data-target="#productModal">Add to cart</button>
+            <?php
+                global $wooextension;
+                $dataProduct = ($product->is_type( 'variable' )) ? $wooextension->genDataProductClass($product->get_id()) : false ;
+            ?>
+            <button class="btn btn-primary fw-bold" data-product='<?php echo $dataProduct ?>' data-id="<?php echo $product->get_id() ?>" <?php if(!($product->is_type( 'variable' ))): ?> data-addcart="<?php echo wc_get_cart_url() . "?add-to-cart=". $product->get_id() ?>" <?php endif; ?>>Add to cart</button>
         </div>
     </div>
 </div>

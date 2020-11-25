@@ -18,7 +18,6 @@
 defined( 'ABSPATH' ) || exit;
 
 get_header( 'shop' );
-
 ?>
 
 <style>
@@ -162,50 +161,20 @@ get_header( 'shop' );
                         <div class="row row-mobile">
                             <div class="col-xl-7 col-lg-7 col-12 col-mobile">
                                 <div class="product-image">
-                                    <img src="images/regular1.jpg" alt="">
+                                    <img src="<?php echo get_template_directory_uri() ?>/assets/images/regular1.jpg" alt="">
                                 </div>
                             </div>
                             <div class="col-xl-5 col-lg-5 col-12 col-mobile">
                                 <div class="product-detail">
                                     <div class="product-title">
                                         <span class="fs-md title">HEY SNOWFLAKE IN THE REAL WORLD T SHIRT</span>
-                                        <span class="fs-md type">Classic T-Shirt</span>
+<!--                                        <span class="fs-md type">Classic T-Shirt</span>-->
                                     </div>
                                     <div class="product-price">
                                         <span class="price fs-xl fw-bold">$29.95 </span><span class="small-price fs-lg">$34.95</span>
                                     </div>
                                     <div class="product-types-list">
                                         <ul>
-                                            <li class="type-image-wrapper active" data-name="Classic T-Shirt">
-                                                <div class="type-image">
-                                                    <img src="images/regular1.jpg" alt="">
-                                                </div>
-                                            </li>
-                                            <li class="type-image-wrapper" data-name="Hooded Sweatshirt">
-                                                <div class="type-image">
-                                                    <img src="images/regular2.jpg" alt="">
-                                                </div>
-                                            </li>
-                                            <li class="type-image-wrapper" data-name="Long Sleeve Tee">
-                                                <div class="type-image">
-                                                    <img src="images/regular3.jpg" alt="">
-                                                </div>
-                                            </li>
-                                            <li class="type-image-wrapper" data-name="V-Neck T-Shirt">
-                                                <div class="type-image">
-                                                    <img src="images/regular4.jpg" alt="">
-                                                </div>
-                                            </li>
-                                            <li class="type-image-wrapper" data-name="Crewneck Sweatshirt">
-                                                <div class="type-image">
-                                                    <img src="images/regular5.jpg" alt="">
-                                                </div>
-                                            </li>
-                                            <li class="type-image-wrapper" data-name="Unisex Tank">
-                                                <div class="type-image">
-                                                    <img src="images/regular6.jpg" alt="">
-                                                </div>
-                                            </li>
                                         </ul>
                                     </div>
                                     <div class="product-size-select">
@@ -215,11 +184,6 @@ get_header( 'shop' );
                                             <span class="size"></span>
                                         </div>
                                         <ul>
-                                            <li class="fw-bold">S</li>
-                                            <li class="fw-bold">M</li>
-                                            <li class="fw-bold">L</li>
-                                            <li class="fw-bold">XL</li>
-                                            <li class="fw-bold">2XL</li>
                                         </ul>
                                     </div>
                                     <div class="product-color-select">
@@ -228,46 +192,6 @@ get_header( 'shop' );
                                             <span class="color">Black</span>
                                         </div>
                                         <ul>
-                                            <li class="fw-bold active" data-name="Black">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #111111;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold" data-name="Chocolate">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #381d1b;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold" data-name="Charcoal Grey">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #36454F;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold" data-name="Athletic Heather">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #97999B;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold" data-name="J Navy">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #0A2245;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold" data-name="Royal">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #054ae8;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold">
-                                                <div class="color-circle" data-name="True Red">
-                                                    <div class="circle" style="background-color: #b1202d;"></div>
-                                                </div>
-                                            </li>
-                                            <li class="fw-bold" data-name="Kelly">
-                                                <div class="color-circle">
-                                                    <div class="circle" style="background-color: #00984F;"></div>
-                                                </div>
-                                            </li>
                                         </ul>
                                     </div>
                                     <div class="product-quantity-list">
@@ -282,6 +206,12 @@ get_header( 'shop' );
                                         </div>
                                     </div>
                                     <div class="product-add-to-cart">
+                                        <input type="hidden" name="product" value="" id="inProduct">
+                                        <input type="hidden" name="qty" value="1" id="inQty">
+                                        <input type="hidden" name="variable" value="" id="inVariable">
+                                        <input type="hidden" name="sizeSelect" value="" id="sizeSelect">
+                                        <input type="hidden" name="colorSelect" value="" id="colorSelect">
+
                                         <button class="btn btn-add-card fw-bold">Add to cart</button>
                                     </div>
                                     <div class="view-detail">

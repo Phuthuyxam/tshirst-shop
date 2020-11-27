@@ -7,6 +7,8 @@ class Woocomerce_extension
     public function __construct(){
         add_action( 'pre_get_posts', [$this,'addFilterProduct'] );
         add_action( 'rest_api_init', [$this , 'registerApi']);
+        add_action('wp_ajax_woocommerce_ajax_add_to_cart', [$this , 'woocommerce_ajax_add_to_cartfunc']);
+        add_action('wp_ajax_nopriv_woocommerce_ajax_add_to_cart', [$this, 'woocommerce_ajax_add_to_cartfunc']);
     }
 
     public function loader() {
@@ -254,11 +256,6 @@ class Woocomerce_extension
             'methods' => 'GET',
             'callback' => [$this , 'apiGetVariableProduct'],
         ) );
-
-        register_rest_route( 'api/v1', '/ptx-woocomerce-add-to-cart', array(
-            'methods' => 'POST',
-            'callback' => [$this , 'apiAddToCart'],
-        ) );
     }
 
     public function apiGetVariableProduct( WP_REST_Request $request ) {
@@ -312,18 +309,20 @@ class Woocomerce_extension
         die();
     }
 
-    public function apiAddToCart() {
-
+    public function woocommerce_ajax_add_to_cartfunc() {
         $product_id = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['pid']));
-        $quantity = empty($_POST['quantity']) ? 1 : wc_stock_amount($_POST['qty']);
+        $quantity = empty($_POST['qty']) ? 1 : wc_stock_amount($_POST['qty']);
         $variation_id = absint($_POST['vid']);
+        $color = $_POST['color'];
+        $size = $_POST['size'];
         $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity);
         $product_status = get_post_status($product_id);
 
-        WC()->cart = new WC_Cart();
-
-        
-        if ($passed_validation && WC()->cart->add_to_cart($product_id, $quantity, $variation_id) && 'publish' === $product_status) {
+        $arrAttr = [
+                'attribute_pa_size' => $size,
+                'attribute_pa_color' => $color
+        ];
+        if ($passed_validation && WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $arrAttr , null) && 'publish' === $product_status) {
 
             do_action('woocommerce_ajax_added_to_cart', $product_id);
 
@@ -364,6 +363,5 @@ class Woocomerce_extension
 
         return json_encode($result);
     }
-
 }
 $GLOBALS['wooextension'] = new Woocomerce_extension();

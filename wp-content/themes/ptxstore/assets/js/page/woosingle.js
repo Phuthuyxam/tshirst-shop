@@ -1,5 +1,6 @@
 //Menu
 jQuery(document).ready(function() {
+
     jQuery('.menu-box .main-menu>li.menu-item-has-children>a').append('<i class="fa fa-angle-down"></i>');
     jQuery('.menu-box .main-menu .sub-menu>li.menu-item-has-children>a').append('<i class="fa fa-angle-right"></i>');
 
@@ -93,7 +94,7 @@ jQuery(document).ready(function() {
         jQuery(this).find('.collapse').toggleClass('d-none');
         jQuery(this).parents('.filter-item').find('.filter-content').slideToggle();
     })
-    
+
     jQuery('.show-more').click(function(){
         jQuery(this).parents('ul').find('li.hide').removeClass('d-none');
         jQuery(this).addClass('d-none');
@@ -110,47 +111,18 @@ jQuery(document).ready(function() {
         jQuery(this).find('.sort-options').removeClass('d-none');
     })
 
-    jQuery('body').on('click', '.product-types-list ul li' , function(){
-
-        var id = jQuery(this).attr("data-id");
-        var url = 'http://local.decor.com'+'/wp-json/api/v1/get-woocomerce-product?productId='+id;
-        var loading = 'http://local.decor.com/wp-content/themes/ptxstore/assets/images/loading-page.gif';
-        jQuery('#productModal').find('.product-image img').attr('src',loading);
-        fetch(url)
-            .then(response => response.json())
-            .then(result => {
-                result = JSON.parse(result);
-                setColorList(result,jQuery('#productModal').find('.product-color-select'));
-                setListSize(result[0],jQuery('.product-size-select ul'));
-                setQuantity(result[0],jQuery('#productModal').find('.product-quantity-list'));
-                setPrice(result[0],jQuery('#productModal').find('.product-price'));
-                jQuery(this).parent().find('li').removeClass('active');
-                jQuery(this).addClass('active');
-                jQuery(this).parents('.product-wrapper').find('.product-image img').attr("src",jQuery(this).find('img').attr('src'));
-                jQuery(this).parents('.product-wrapper').find('.product-title .title').text(jQuery(this).data('name'));
-                jQuery('#inProduct').val(id);
-            }).catch(error => {
-            console.error(error);
-        });
-
-
+    jQuery('.product-types-list ul li').click(function(){
+        jQuery(this).parent().find('li').removeClass('active');
+        jQuery(this).addClass('active');
+        jQuery(this).parents('.product-wrapper').find('.product-image img').attr("src",jQuery(this).find('img').attr('src'));
+        jQuery(this).parents('.product-wrapper').find('.product-title .type').text(jQuery(this).data('name'));
     })
 
-    jQuery('.view-detail a').click(function (event) {
-        event.preventDefault();
-
-        var url = jQuery('.product-types-list ul .active').attr('data-url');
-
-        window.location.href = url;
-
-    })
-
-    jQuery('body').on('click', '.product-size-select ul li', function(){
+    jQuery('.product-size-select ul li').click(function(){
         jQuery(this).parent().find('li').removeClass('active');
         jQuery(this).addClass('active');
         jQuery(this).parents('.product-size-select').find('.placeholder').addClass('d-none');
         jQuery(this).parents('.product-size-select').find('.size').text(jQuery(this).text());
-        setValueInput();
     })
 
     jQuery('body').on('click','.product-color-select ul li',function(){
@@ -158,52 +130,20 @@ jQuery(document).ready(function() {
         jQuery(this).addClass('active');
         jQuery(this).parents('.product-color-select').find('.color').text(jQuery(this).data('name'));
         var key = jQuery(this).data('key');
-
-        setValueInput();
-    })
-
-    jQuery('.btn-add-card').click(function () {
-        var productId = jQuery('.product-types-list ul .active').attr('data-id');
-        var variableProduct = jQuery('#inVariable').val();
-        var quatity = jQuery('#inQty').val();
-        var  size = jQuery('#sizeSelect').val();
-        var color = jQuery('#colorSelect').val();
-        jQuery.ajax({
-            type: "POST",
-            url: 'http://local.decor.com/wp-admin/admin-ajax.php',
-            data: {
-                'action' : 'woocommerce_ajax_add_to_cart',
-                'pid' : productId,
-                'vid' : variableProduct,
-                'qty' : quatity,
-                'color' : color,
-                'size' : size
-            },
-            dataType: 'json',
-            success: function (data){
-                console.log(data);
-                if(data.error) {
-                    alert("Add to cart error please try again");
-                    location.reload();
-                }else{
-                    var image = jQuery('.product-image').html();
-                    jQuery('.atc-product-image').html(image);
-                    jQuery('#productModal').modal('hide');
-                    jQuery('#addToCart').modal('show');
-                }
-
-            },
+        fetch('http://localhost/tshirt/tshirt-shop/fakedata.json')
+            .then(response => response.json())
+            .then(result => {
+                setImage(result[key],jQuery('#productModal').find('.product-image img'));
+                setPrice(result[key],jQuery('#productModal').find('.product-price'))
+            }).catch(error => {
+            console.error(error);
         });
-
-
-
     })
 
     jQuery('.product-quantity-select button.plus').click(function(){
         var val = jQuery(this).parents('.product-quantity-select').find('.quantity').text();
         jQuery(this).parents('.product-quantity-list').find('.quantity').text(parseInt(val) + 1);
         jQuery(this).parents('.product-quantity-select').find('.minus').removeClass('disabled');
-        updateQuantity();
     })
 
     jQuery('.product-quantity-select button.minus').click(function(){
@@ -214,12 +154,7 @@ jQuery(document).ready(function() {
             jQuery(this).addClass('disabled');
             jQuery(this).parents('.product-quantity-list').find('.quantity').text(1);
         }
-        updateQuantity();
     })
-
-    function updateQuantity() {
-        jQuery('#inQty').val(jQuery('.quantity').first().text());
-    }
 
     jQuery('.category-side-layout').click(function(){
         jQuery(this).parents('.category-side-content').css('width','0');
@@ -248,22 +183,15 @@ jQuery(document).ready(function() {
         }
     })
 
-    if(jQuery('#zoom_03').length > 0) {
-        jQuery("#zoom_03").elevateZoom({
-            gallery: 'gal1',
-            cursor: 'pointer',
-            galleryActiveClass: 'active',
-            imageCrossfade: true
-        });
-    }
+    // jQuery("#zoom_03").elevateZoom({gallery:'gal1', cursor: 'pointer', galleryActiveClass: 'active', imageCrossfade: false});
 
     jQuery('.products-select').click(function(){
         jQuery(this).parent().find('.product-options').show();
-    }) 
-    
+    })
+
     jQuery('.products-select.quantity-select').click(function(){
         jQuery(this).parent().find('.quantity-options').show();
-    }) 
+    })
 
     jQuery('.btn-save-changes').click(function(){
         jQuery(this).parents('.product-wrapper').removeClass('active');
@@ -318,78 +246,35 @@ jQuery(document).ready(function() {
     })
 
     jQuery('.btn-add-cart button').click(function(){
-
-        var dataProduct = jQuery(this).attr('data-product');
-        var productId = jQuery(this).attr('data-id');
-        if(!dataProduct){
-            window.location.href = jQuery(this).attr('data-addcart');
-        }else{
-            // // data-toggle="modal" data-target="#productModal"
-            var images = JSON.parse(dataProduct);
-            var url = 'http://local.decor.com' +'/wp-json/api/v1/get-woocomerce-product?productId='+productId;
-            fetch(url)
-                .then(response => response.json())
-                .then(result => {
-                    result = JSON.parse(result);
-                    setColorList(result,jQuery('#productModal').find('.product-color-select'));
-                    setListSize(result[0],jQuery('.product-size-select ul'));
-                    setQuantity(result[0],jQuery('#productModal').find('.product-quantity-list'));
-                    setPrice(result[0],jQuery('#productModal').find('.product-price'));
-                    // setImage(images[0],jQuery('#productModal').find('.product-image img'));
-                    setListImages(images, jQuery('.product-types-list ul'));
-                    setValueInput();
-                    jQuery('#productModal').modal('show');
-
-                }).catch(error => {
-                console.error(error);
-            });
-
-
-        }
-    })
-});
-
-function setValueInput() {
-    // set product id
-    var productId = jQuery('.product-types-list ul .active').attr('data-id');
-    var size = jQuery('.product-size-select ul .active').attr('data-name');
-    var color = jQuery('.product-color-select ul .active').attr('data-name');
-
-    if(productId.length > 0 && size.length > 0 && color.length > 0 ) {
-        var endpoint = buildUrl(productId, color, size);
-        var loading = 'http://local.decor.com/wp-content/themes/ptxstore/assets/images/loading-page.gif';
-        jQuery('#productModal').find('.product-image img').attr('src',loading);
-        fetch(endpoint)
+        fetch('http://localhost/tshirt/tshirt-shop/fakedata.json')
             .then(response => response.json())
             .then(result => {
-                result = JSON.parse(result);
-                jQuery('#sizeSelect').val(size);
-                jQuery('#colorSelect').val(color);
-                jQuery('#inVariable').val(result.variation_id);
-                setPrice(result,jQuery('#productModal').find('.product-price'));
-                setImage(result,jQuery('#productModal').find('.product-image img'));
+                setColorList(result,jQuery('#productModal').find('.product-color-select'));
+                setQuantity(result[0],jQuery('#productModal').find('.product-quantity-list'));
+                setPrice(result[0],jQuery('#productModal').find('.product-price'));
+                setImage(result[0],jQuery('#productModal').find('.product-image img'));
             }).catch(error => {
             console.error(error);
         });
-    }
-}
+    })
+});
 
 function buildUrl(id,color,size) {
-    var url = 'http://local.decor.com'+'/wp-json/api/v1/get-woocomerce-product?productId='+id+'&pa_color='+color+'&pa_size='+size;
-    return url;
+    var url = window.location.origin+'/wp-json/api/v1/get-woocomerce-product?productId='+id+'&pa_color='+color+'&pa_size'+size;
 }
 
 function setColorList(data,parent){
+
     var html = "";
     data.forEach((value,key) => {
         html += ` <li class="fw-bold `+(key == 0 ? 'active':'')+`" data-name="`+value.attributes.attribute_pa_color+`" data-key="`+key+`">
                     <div class="color-circle">
-                        <div class="circle" style="background-color:`+ value.attributes.color_hex +`;"></div>
+                        <div class="circle" style="background-color:`+value.attributes.attribute_pa_color+`;"></div>
                     </div>
                 </li>`;
         if (key == 0){
             parent.find('.product-color-title .color').text(value.attributes.attribute_pa_color);
-        }                       
+        }
     })
     parent.find('ul').html(html);
 }
@@ -403,37 +288,7 @@ function setPrice(data,parent) {
     parent.find('.small-price').text(new Intl.NumberFormat().format(data.display_regular_price));
 }
 
-function setListImages(data, parent) {
-    var html = "";
-    data.forEach(function (item, key) {
-        html += `<li class="type-image-wrapper `+(key == 0 ? 'active':'')+`" data-name="`+ item.name +`" data-id="`+ item.id +`" data-url="`+ item.url +`">
-                    <div class="type-image">
-                        <img src="`+ item.image +`" alt="image cate list">
-                    </div>
-                </li>`;
-    });
-
-    parent.html(html);
-}
-
-function setListSize(data, parent) {
-    var html = "";
-    if(data.attributes.attribute_pa_size != null && data.attributes.all_size.length > 0) {
-        data.attributes.all_size.forEach(function (item, key) {
-
-            html += `<li class="fw-bold `+(key == 0 ? 'active':'')+`" data-name="`+ item.toLowerCase() +`">`+ item +`</li>`;
-        });
-    }
-
-    parent.html(html);
-}
-
-// function setImage(data,parent) {
-//     parent.attr('src',data.image);
-// }
-
 function setImage(data,parent) {
     parent.attr('src',data.image.url);
 
 }
-

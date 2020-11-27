@@ -41,6 +41,12 @@ get_header( 'shop' );
     .woocommerce-pagination {
         margin: 0 auto;
     }
+    .atc-product-image img {
+        width: 80px;
+    }
+    .atc-product-image {
+        text-align: center;
+    }
 
 </style>
 
@@ -161,13 +167,13 @@ get_header( 'shop' );
                         <div class="row row-mobile">
                             <div class="col-xl-7 col-lg-7 col-12 col-mobile">
                                 <div class="product-image">
-                                    <img src="<?php echo get_template_directory_uri() ?>/assets/images/regular1.jpg" alt="">
+                                    <img src="<?php echo get_template_directory_uri() ?>/assets/images/loading-page.gif" alt="loading page">
                                 </div>
                             </div>
                             <div class="col-xl-5 col-lg-5 col-12 col-mobile">
                                 <div class="product-detail">
                                     <div class="product-title">
-                                        <span class="fs-md title">HEY SNOWFLAKE IN THE REAL WORLD T SHIRT</span>
+                                        <span class="fs-md title"></span>
 <!--                                        <span class="fs-md type">Classic T-Shirt</span>-->
                                     </div>
                                     <div class="product-price">
@@ -226,6 +232,44 @@ get_header( 'shop' );
         </div>
     </div>
 
+
+    <!-- modal show add cart -->
+    <div class="modal fade" id="addToCart" tabindex="-1" role="dialog" aria-labelledby="product-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="product-wrapper">
+                        <div class="row row-mobile" style="display: flex; align-items: center; justify-content: center">
+                            <div class="col-xl-5 col-lg-5 col-12 col-mobile">
+                                <div class="atc-status text-center" style="display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                                    <img src="<?php echo get_template_directory_uri() ?>/assets/images/check.png" width="20px" style="margin-right: 8px"> <b>Added to cart</b>
+                                </div>
+                                <div class="atc-product-image">
+                                    <img src="<?php echo get_template_directory_uri() ?>/assets/images/loading-page.gif" alt="loading page">
+                                </div>
+                            </div>
+                            <div class="col-xl-7 col-lg-7 col-12 col-mobile">
+
+                                <div class="atc-btn btn fw-bold" style="color: #0062cc; border: solid thin #0062cc; margin-right: 20px">
+                                    <a href="<?php echo wc_get_cart_url() ?>">Cart</a>
+                                </div>
+
+                                <div class="btn btn-primary fw-bold">
+                                    <a href="<?php echo wc_get_checkout_url() ?>" style="color: #ffffff">Proceed to checkout</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

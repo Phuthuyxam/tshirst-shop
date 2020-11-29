@@ -304,6 +304,11 @@ if( function_exists('acf_add_options_page') ) {
 		'capability'	=> 'edit_posts',
 		'redirect'		=> true
 	));
+    acf_add_options_sub_page(array(
+        'page_title' 	=> 'Theme General Settings',
+        'menu_title'	=> 'General',
+        'parent_slug'	=> 'theme-general-settings',
+    ));
 
 	acf_add_options_sub_page(array(
 		'page_title' 	=> 'Theme Home Settings',

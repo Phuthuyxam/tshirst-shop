@@ -15,6 +15,10 @@ function header_default()
     <?php endif; ?>
     <?php wp_head(); ?>
     <?php echo get_field('header_code', 'option') ?>
+    <script>
+        var mainUrl = '<?php echo get_bloginfo("url") ?>';
+        var currency = '<?php echo get_option('woocommerce_currency') ?>';
+    </script>
     </head>
     <?php
 }

@@ -179,11 +179,11 @@ get_header( 'shop' );
                                     <div class="product-price">
                                         <span class="price fs-xl fw-bold">$29.95 </span><span class="small-price fs-lg">$34.95</span>
                                     </div>
-                                    <div class="product-types-list">
+                                    <div class="ptx-product-types-list product-types-list">
                                         <ul>
                                         </ul>
                                     </div>
-                                    <div class="product-size-select">
+                                    <div class="ptx-product-size-select product-size-select">
                                         <div class="product-size-title">
                                             <span class="fw-bold label">Size: </span>
                                             <span class="fw-bold placeholder">Select a Size</span>
@@ -192,7 +192,7 @@ get_header( 'shop' );
                                         <ul>
                                         </ul>
                                     </div>
-                                    <div class="product-color-select">
+                                    <div class="ptx-product-color-select product-color-select">
                                         <div class="product-color-title">
                                             <span class="fw-bold label">Color: </span>
                                             <span class="color">Black</span>

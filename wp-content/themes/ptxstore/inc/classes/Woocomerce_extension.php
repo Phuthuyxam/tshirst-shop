@@ -270,14 +270,22 @@ class Woocomerce_extension
             $allVariableProduct = $_product->get_available_variations();
 
             if(isset($color) && isset($size)){
-                foreach ($allVariableProduct as $vProduct) {
+                foreach ($allVariableProduct as $key => $vProduct) {
 
                     if( ( isset($vProduct['attributes']['attribute_pa_color']) && $vProduct['attributes']['attribute_pa_color'] == $color && $vProduct['attributes']['attribute_pa_size'] == "" )
                         || ( isset($vProduct['attributes']['attribute_pa_size']) && $vProduct['attributes']['attribute_pa_size'] == $size && $vProduct['attributes']['attribute_pa_color'] == "" )) {
+                        $sizes = $_product->get_attribute('pa_size');
+                        $allSize = explode("," , str_replace(" ", "", $sizes));
+                        $colors = $_product->get_attribute('pa_color');
+                        $colors = explode("," , str_replace(" ", "", $colors));
+                        $vProduct['attributes']['all_size'] = $allSize;
+                        $vProduct['attributes']['all_color'] = $colors;
                         $result = $vProduct;
                     }else{
                         if( isset($vProduct['attributes']['attribute_pa_color']) && $vProduct['attributes']['attribute_pa_color'] == $color
                             && isset($vProduct['attributes']['attribute_pa_size']) && $vProduct['attributes']['attribute_pa_size'] == $size ) {
+
+
                             $result = $vProduct;
                         }
                     }
@@ -362,6 +370,43 @@ class Woocomerce_extension
         }
 
         return json_encode($result);
+    }
+
+    public function getRelateProduct() {
+        global $post;
+        $cats = wp_get_post_terms( $post->ID, "product_cat" );
+        foreach ( $cats as $cat ) {
+            $cats_array[] .= $cat->term_id;
+        }
+        $tags = wp_get_post_terms( $post->ID, "product_tag" );
+        foreach ( $tags as $tag ) {
+            $tags_array[] .= $tag->term_id;
+        }
+        $related_posts = new WP_Query(
+            array(
+                'orderby' => 'rand',
+                'posts_per_page' => 6,
+                'post_type' => 'product',
+                'post__not_in' => array($post->ID),
+                'tax_query' => array(
+
+                    'relation' => 'OR',
+                    array(
+                            'taxonomy' => 'product_cat',
+                            'field' => 'id',
+                            'terms' => $cats_array
+                    ),
+
+                    array(
+                        'taxonomy' => 'product_tag',
+                        'field' => 'id',
+                        'terms' => $tags_array
+                    )
+                )
+            )
+        );
+
+        return $related_posts;
     }
 }
 $GLOBALS['wooextension'] = new Woocomerce_extension();

@@ -338,6 +338,13 @@ class Woocomerce_extension
                 wc_add_to_cart_message(array($product_id => $quantity), true);
             }
 
+            $addCartData = $this->renderUpsellProduct($product_id);
+            echo "<pre>";
+            print_r($addCartData);
+            echo "</pre>";
+            die();
+
+            $a = "asdasd";
             WC_AJAX :: get_refreshed_fragments();
         } else {
 
@@ -408,5 +415,144 @@ class Woocomerce_extension
 
         return $related_posts;
     }
+
+    public function renderUpsellProduct($productId) {
+        $productClass = get_the_terms($productId, 'ptx_product_class');
+        $productClass = $productClass[0];
+        $productClassData =  [];
+        $query = new WP_Query(['post_type' => 'product' , 'post_status' => 'publish', 'posts_per_page' => -1, 'post__not_in' => array($productId),'tax_query' => [ ['taxonomy' => 'ptx_product_class' , 'field' => 'term_id' , 'terms' => $productClass->term_id] ] ]);
+        if($query->have_posts()) {
+              while ($query->have_posts()){
+                     $query->the_post();
+                  $productClassData[] = get_the_ID();
+            }
+        }
+        if(empty($productClassData)) return false;
+        $productUpsell = $productClassData[0];
+        $product = wc_get_product( $productUpsell );
+        $product_attributes = $product->get_attributes();
+        $class = get_the_terms($product->get_id(), 'ptx_product_class')[0];
+        $firstVariation = false;
+        if($product->product_type=='variable') {
+            $variations = $product->get_available_variations();
+
+            if(isset($variations) && !empty($variations)){
+                $firstVariation = $variations[0]['attributes'];
+                $firstVariation['variation_id'] = $variations[0]['variation_id'];
+            }
+
+        }
+        ob_start();
+        ?>
+            <hr>
+            <strong style="">You May Also Like</strong>
+            <hr>
+            <div class="product-wrapper add-cart-upsell">
+                <div class="row row-mobile">
+                    <div class="col-xl-7 col-lg-7 col-12 col-mobile">
+                        <div class="product-image">
+                            <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $loop->post->ID ), 'single-post-thumbnail' );?>
+                            <img src="<?php  echo $image[0]; ?>" alt="product image">
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-5 col-12 col-mobile">
+                        <div class="product-detail">
+                            <div class="product-title">
+                                <span class="fs-md title"><?php echo $product->get_name() ?></span>
+                                <span class="fs-md type"><?php echo $class->name ?></span>
+                            </div>
+                            <div class="product-price">
+                                <span class="price fs-xl fw-bold">
+                                    <?php echo $product->get_price_html(); ?>
+                                </span>
+
+
+                                <?php
+                                if(isset($product_attributes['pa_size']) && !empty($product_attributes['pa_size'])):
+                                    $sizeAttr = $product_attributes['pa_size']->get_data();
+
+                                    ?>
+                                    <div class="product-size-select">
+                                        <div class="product-size-title">
+                                            <span class="fw-bold label">Size: </span>
+                                            <span class="fw-bold placeholder">Select a Size</span>
+                                            <span class="size"></span>
+                                        </div>
+                                        <ul>
+                                            <?php
+                                            if($firstVariation['attribute_pa_size'] == "") {
+                                                $firstTerm = get_term_by('id' , $sizeAttr['options'][0], $sizeAttr['name'], OBJECT, 'raw');
+                                                $activeItem = $firstTerm->slug;
+                                            }else{
+                                                $activeItem = $firstVariation["attribute_pa_size"];
+                                            }
+                                            foreach ($sizeAttr['options'] as $size):
+                                                $term = get_term_by('id' , $size, $sizeAttr['name'], OBJECT, 'raw');
+                                                ?>
+                                                <li class="fw-bold <?php echo ( $activeItem == $term->slug ) ? 'active' : false ?>" data-size="<?php echo $term->slug ?>"><?php echo $term->name ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php
+                                if(isset($product_attributes['pa_color']) && !empty($product_attributes['pa_color'])):
+                                    $colorAttr = $product_attributes['pa_color']->get_data();
+                                    $termFirst = get_term_by('id' , $colorAttr['options'][0] , $colorAttr['name'], OBJECT, 'raw');
+                                    ?>
+                                    <div class="product-color-select">
+                                        <div class="product-color-title">
+                                            <span class="fw-bold label">Color: </span>
+                                            <span class="color"><?php echo $termFirst->name ?></span>
+                                        </div>
+                                        <ul>
+                                            <?php
+                                            if($firstVariation['attribute_pa_color'] == "") {
+                                                $activeItemColor = $termFirst->slug;
+                                            }else{
+                                                $activeItemColor = $firstVariation["attribute_pa_color"];
+                                            }
+                                            foreach ($colorAttr['options'] as $key => $color):
+                                                $term = get_term_by('id' , $color, $colorAttr['name'], OBJECT, 'raw');
+                                                $bgColor = get_field('color_hex', 'pa_color_'.$term->term_id);
+                                                ?>
+                                                <li class="fw-bold <?php if($term->slug == $activeItemColor) echo 'active' ?>" data-name="<?php echo $term->name ?>" data-color="<?php echo $term->slug ?>">
+                                                    <div class="color-circle">
+                                                        <div class="circle" style="background-color: <?php echo $bgColor ?>;"></div>
+                                                    </div>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+
+                                <?php endif; ?>
+
+                            <div class="product-quantity-list">
+                                <div class="product-quantity-title">
+                                    <span class="fw-bold label">Qty: </span>
+                                    <span class="quantity">1</span>
+                                </div>
+                                <div class="product-quantity-select">
+                                    <button class="btn minus disabled"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
+                                    <span class="quantity">1</span>
+                                    <button class="btn plus"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                            <div class="product-add-to-cart">
+                                <button class="btn btn-add-card fw-bold">Add to cart</button>
+                            </div>
+                            <div class="view-detail">
+                                <a href="#">View full product details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php
+        $content = ob_get_contents();
+        ob_get_clean();
+        return $content;
+    }
+
 }
 $GLOBALS['wooextension'] = new Woocomerce_extension();

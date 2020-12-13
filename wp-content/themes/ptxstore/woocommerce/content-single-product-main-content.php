@@ -30,7 +30,6 @@
             </span>
             <br>
             <?php
-
                 if(isset($class) && !empty($class)):
             ?>
                     <span class="fs-md type">
@@ -38,6 +37,16 @@
                     </span>
             <?php endif; ?>
         </div>
+        <div class="ptx-rating" style="display: flex; align-items: center;">
+            <?php
+                $fakeRatting = get_field('product_ratting_start', get_the_ID());
+                $average = $fakeRatting ? $fakeRatting : $product->get_average_rating();
+                echo '<div class="star-rating" style="float: left; color: #F8AA00;">
+                        <span style="width:'.( ( $average / 5 ) * 100 ) . '%"></span>
+                      </div> <b style="margin-left: 8px"> '. $average .' </b>';
+            ?>
+        </div>
+        <br>
         <div class="product-price" id="ptx-single-price">
             <span class="price fs-xl fw-bold">
                 <?php echo $product->get_price_html(); ?>
@@ -168,13 +177,20 @@
                     <span class="fw-bold quantity">1</span>
                 </div>
 
-                <div class="products-select quantity-select">
-                    <div class="products-quantity-select-overlay"></div>
-                    <div class="product-name">
-                        <span class="quantity" id="ptx-quantity">1</span>
+                <div class="section-quantity" style="display: flex; align-items: center; margin-top: 1rem;">
+                    <div class="products-select quantity-select" style="margin-top: 0px">
+                        <div class="products-quantity-select-overlay"></div>
+                        <div class="product-name">
+                            <span class="quantity" id="ptx-quantity">1</span>
+                        </div>
+                        <i class="fa fa-angle-down fs-md " aria-hidden="true"></i>
                     </div>
-                    <i class="fa fa-angle-down fs-md " aria-hidden="true"></i>
+                    <div class="ptx-time-count-down" style="display: flex; align-items: center; margin-left: 0.5rem">
+                        <img src="<?php echo get_template_directory_uri() ?>/assets/images/alarm.png">
+                        <span id="time" style="margin-left: 5px">05:00</span> &nbsp; left to buy
+                    </div>
                 </div>
+
 
 
                 <div class="quantity-options" id="ptx-quantity-options">
@@ -266,7 +282,7 @@
         <div class="campaign-wrapper" style="margin-top: 2rem;">
             <h5 class="fw-bold fs-lg py-3">Campaign Details</h5>
             <div class="content">
-                <?php echo get_field('campaign_details', 'option') ?>
+                <?php echo get_field('campaign_details', get_the_ID()) ?>
             </div>
         </div>
         <div class="campaign-wrapper">

@@ -181,7 +181,6 @@ jQuery(document).ready(function() {
             },
             dataType: 'json',
             success: function (data){
-                console.log(data);
                 if(data.error) {
                     alert("Add to cart error please try again");
                     location.reload();
@@ -262,7 +261,7 @@ jQuery(document).ready(function() {
     }) 
     
     jQuery('.products-select.quantity-select').click(function(){
-        jQuery(this).parent().find('.quantity-options').show();
+        jQuery(this).parents('#ptx-product-quantity-select').find('.quantity-options').show();
     }) 
 
     jQuery('.btn-save-changes').click(function(){
@@ -443,6 +442,40 @@ function setImage(data,parent) {
 jQuery('#addToCart').on('hidden.bs.modal', function () {
     window.location.reload();
 })
+
+// count down
+// Set the date we're counting down to
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+}
+var countDownDate = new Date().addHours(7).getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+    // Get today's date and time
+    var now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    var distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Display the result in the element with id="demo"
+    document.getElementById("time").innerHTML = hours + ":"
+        + minutes + ":" + seconds;
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("time").innerHTML = "EXPIRED";
+    }
+}, 1000);
 
 
 

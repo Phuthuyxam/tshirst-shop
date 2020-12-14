@@ -120,6 +120,7 @@ jQuery('#ptx-single-add-cart').click(function () {
         },
         dataType: 'json',
         success: function (data){
+            console.log(data);
             if(data.error) {
                 alert("Add to cart error please try again");
                 location.reload();
@@ -127,6 +128,12 @@ jQuery('#ptx-single-add-cart').click(function () {
                 var image = jQuery('#ptx-single-avatar').val();
                 jQuery('.atc-product-image img').attr("src",image);
                 jQuery('#productModal').modal('hide');
+                if(data.product_upsell) {
+                    jQuery('#section-upsell-product').html(data.product_upsell);
+                }
+                if(data.cart_info) {
+                    jQuery('.ptx-cart-info').html(data.cart_info);
+                }
                 jQuery('#addToCart').modal('show');
             }
 

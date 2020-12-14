@@ -339,12 +339,17 @@ class Woocomerce_extension
             }
 
             $addCartData = $this->renderUpsellProduct($product_id);
-            echo "<pre>";
-            print_r($addCartData);
-            echo "</pre>";
-            die();
 
-            $a = "asdasd";
+            if($addCartData) {
+                $addCartData = $this->minifier($addCartData);
+            }
+            $cart = '<b>Cart subtotal</b>('. WC()->cart->get_cart_contents_count() .' items ) :<b>'. wc_price( WC()->cart->total ) .'</b>';
+            $data = array(
+                'error' => false,
+                'product_upsell' => $addCartData,
+                'cart_info' => $cart
+            );
+            echo wp_send_json($data);
             WC_AJAX :: get_refreshed_fragments();
         } else {
 
@@ -415,7 +420,25 @@ class Woocomerce_extension
 
         return $related_posts;
     }
+    private function minifier($code) {
+        $search = array(
 
+            // Remove whitespaces after tags
+            '/\>[^\S ]+/s',
+
+            // Remove whitespaces before tags
+            '/[^\S ]+\</s',
+
+            // Remove multiple whitespace sequences
+            '/(\s)+/s',
+
+            // Removes comments
+            '/<!--(.|\s)*?-->/'
+        );
+        $replace = array('>', '<', '\\1');
+        $code = preg_replace($search, $replace, $code);
+        return $code;
+    }
     public function renderUpsellProduct($productId) {
         $productClass = get_the_terms($productId, 'ptx_product_class');
         $productClass = $productClass[0];
@@ -439,10 +462,11 @@ class Woocomerce_extension
             if(isset($variations) && !empty($variations)){
                 $firstVariation = $variations[0]['attributes'];
                 $firstVariation['variation_id'] = $variations[0]['variation_id'];
+                $firstVariation['price_display'] = $variations[0]['price_html'];
             }
 
         }
-        ob_start();
+        ob_start("minifier");
         ?>
             <hr>
             <strong style="">You May Also Like</strong>
@@ -450,8 +474,8 @@ class Woocomerce_extension
             <div class="product-wrapper add-cart-upsell">
                 <div class="row row-mobile">
                     <div class="col-xl-7 col-lg-7 col-12 col-mobile">
-                        <div class="product-image">
-                            <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $loop->post->ID ), 'single-post-thumbnail' );?>
+                        <div class="product-image" id="upsell-product-img">
+                            <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $firstVariation['variation_id'] ), 'single-post-thumbnail' );?>
                             <img src="<?php  echo $image[0]; ?>" alt="product image">
                         </div>
                     </div>
@@ -462,8 +486,8 @@ class Woocomerce_extension
                                 <span class="fs-md type"><?php echo $class->name ?></span>
                             </div>
                             <div class="product-price">
-                                <span class="price fs-xl fw-bold">
-                                    <?php echo $product->get_price_html(); ?>
+                                <span class="price fs-xl fw-bold" id="upsell-product-price">
+                                    <?php echo ($firstVariation) ? $firstVariation['price_display'] : $product->get_price_html(); ?>
                                 </span>
 
 
@@ -472,7 +496,7 @@ class Woocomerce_extension
                                     $sizeAttr = $product_attributes['pa_size']->get_data();
 
                                     ?>
-                                    <div class="product-size-select">
+                                    <div class="product-size-select" id="upsell-product-size">
                                         <div class="product-size-title">
                                             <span class="fw-bold label">Size: </span>
                                             <span class="fw-bold placeholder">Select a Size</span>
@@ -500,7 +524,7 @@ class Woocomerce_extension
                                     $colorAttr = $product_attributes['pa_color']->get_data();
                                     $termFirst = get_term_by('id' , $colorAttr['options'][0] , $colorAttr['name'], OBJECT, 'raw');
                                     ?>
-                                    <div class="product-color-select">
+                                    <div class="product-color-select" id="upsell-product-color">
                                         <div class="product-color-title">
                                             <span class="fw-bold label">Color: </span>
                                             <span class="color"><?php echo $termFirst->name ?></span>
@@ -527,22 +551,53 @@ class Woocomerce_extension
 
                                 <?php endif; ?>
 
-                            <div class="product-quantity-list">
+                            <div class="product-quantity-list" id="upsell-product-qty">
                                 <div class="product-quantity-title">
                                     <span class="fw-bold label">Qty: </span>
                                     <span class="quantity">1</span>
                                 </div>
                                 <div class="product-quantity-select">
                                     <button class="btn minus disabled"><i class="fa fa-minus-circle" aria-hidden="true"></i></button>
-                                    <span class="quantity">1</span>
+                                    <span class="quantity" id="upsell-quantity">1</span>
                                     <button class="btn plus"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                             <div class="product-add-to-cart">
-                                <button class="btn btn-add-card fw-bold">Add to cart</button>
+                                <?php
+                                    if(isset($product_attributes['pa_size']) && !empty($product_attributes['pa_size'])) {
+                                        $sizeAttr = $product_attributes['pa_size']->get_data();
+                                        if ($firstVariation['attribute_pa_size'] == "") {
+                                            $firstTerm = get_term_by('id', $sizeAttr['options'][0], $sizeAttr['name'], OBJECT, 'raw');
+                                            $activeItem = $firstTerm->slug;
+                                        } else {
+                                            $activeItem = $firstVariation["attribute_pa_size"];
+                                        }
+                                        ?>
+                                        <input type="hidden" id="upsell-single-size" value="<?php echo $activeItem ?>">
+                                        <?php
+                                    }
+                                    if(isset($product_attributes['pa_color']) && !empty($product_attributes['pa_color'])) {
+                                        $colorAttr = $product_attributes['pa_color']->get_data();
+                                        $termFirst = get_term_by('id' , $colorAttr['options'][0] , $colorAttr['name'], OBJECT, 'raw');
+                                        if($firstVariation['attribute_pa_color'] == "") {
+                                            $firstTerm = get_term_by('id' , $colorAttr['options'][0], $colorAttr['name'], OBJECT, 'raw');
+                                            $activeItemColor = $firstTerm->slug;
+                                        }else{
+                                            $activeItemColor = $firstVariation["attribute_pa_color"];
+                                        }
+                                        ?>
+                                        <input type="hidden" id="upsell-single-color" value="<?php echo $activeItemColor ?>">
+                                        <?php
+                                    }
+                                ?>
+                                <input type="hidden" id="upsell-single-variation" value="<?php echo $firstVariation['variation_id'] ?>">
+                                <input type="hidden" id="upsell-single-productid" value="<?php echo $productUpsell ?>">
+                                <input type="hidden" id="upsell-single-quantity" value="1">
+                                <input type="hidden" id="cart-url" value="<?php echo wc_get_cart_url() ?>">
+                                <button class="btn btn-add-card fw-bold" data-product='<?php echo json_encode($product->get_available_variations()) ?>' id="upsell-single-add-cart">Add to cart</button>
                             </div>
                             <div class="view-detail">
-                                <a href="#">View full product details</a>
+                                <a href="<?php echo get_permalink($productUpsell) ?>">View full product details</a>
                             </div>
                         </div>
                     </div>

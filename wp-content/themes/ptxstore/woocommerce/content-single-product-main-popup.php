@@ -101,9 +101,7 @@
                         </div>
                         <div class="col-xl-7 col-lg-7 col-12 col-mobile">
                             <div class="ptx-cart-info" style="margin-bottom: 15px">
-                                <b>Cart subtotal</b>
-                                (8 iteems) :
-                                <b>66565656</b>
+
                             </div>
                             <div class="atc-btn btn fw-bold" style="color: #0062cc; border: solid thin #0062cc; margin-right: 20px">
                                 <a href="<?php echo wc_get_cart_url() ?>">Cart</a>
@@ -115,6 +113,9 @@
 
                         </div>
                     </div>
+                </div>
+                <div id="section-upsell-product">
+
                 </div>
             </div>
         </div>

@@ -165,8 +165,60 @@ defined( 'ABSPATH' ) || exit;
 
         <?php do_action( 'woocommerce_before_cart_collaterals' ); ?>
 
-        <div class="cart-collaterals">
+        <div class="cart-collaterals" style="padding: 15px">
+
             <?php
+                $cartItem = WC()->cart->get_cart();
+                if(!empty($cartItem)):
+                    $cartItem = end($cartItem);
+                    $productClass = get_the_terms($cartItem['product_id'], 'ptx_product_class');
+                    $productClass = $productClass[0];
+                    $productClassData =  [];
+                    $query = new WP_Query(['post_type' => 'product' , 'post_status' => 'publish', 'posts_per_page' => -1, 'post__not_in' => array($cartItem['product_id']),'tax_query' => [ ['taxonomy' => 'ptx_product_class' , 'field' => 'term_id' , 'terms' => $productClass->term_id] ] ]);
+                    if($query->have_posts()) {
+                        while ($query->have_posts()){
+                            $query->the_post();
+                            $productClassData[] = get_the_ID();
+                        }
+                        wp_reset_query();
+                    }
+                    if(!empty($productClassData)):
+                    $productUpsell = $productClassData[0];
+                    $getProduct = wc_get_product($productUpsell);
+            ?>
+                        <div class="cart-upsell-product">
+                            <div class="upsell-product-title" style="display: flex">
+                                <strong style="font-size: 21px; font-weight: bold;">
+                                    You May Also Like
+                                </strong>
+                                <div class="ptx-time-count-down" style="display: flex; align-items: center; margin-left: 0.5rem">
+                                    <img src="<?php echo get_template_directory_uri() ?>/assets/images/alarm.png">
+                                    <span id="time" style="margin-left: 5px">05:00</span> &nbsp; left to buy
+                                </div>
+                            </div>
+                            <div class="upsell-product-main">
+                                <div class="upsell-product-image">
+                                    <img src="<?php echo get_the_post_thumbnail_url($productUpsell) ?>" alt="upsell prouduct">
+                                </div>
+                                <div class="cart-upsell-product-content">
+                                    <div class="upsell-product-title">
+                                        <h3>
+                                            <?php echo get_the_title($productUpsell) ?>
+                                        </h3>
+                                    </div>
+                                    <div class="upsell-product-price">
+                                        <?php echo $getProduct->get_price_html() ?>
+                                    </div>
+                                    <div class="upsell-product-addcart">
+                                        <button class="btn fw-bold" id="ptx-single-add-cart" style="width: 100%" >Add to cart</button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+            <?php
+                endif; endif;
                 /**
                  * Cart collaterals hook.
                  *

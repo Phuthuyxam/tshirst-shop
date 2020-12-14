@@ -1637,18 +1637,36 @@ li.show-less {
 .ptx-validate-color-error .color-circle {
     border: solid 1px red !important;
 }
-#ptx-single-price ins {
+.product-price ins {
     text-decoration: none !important;
 }
-#ptx-single-price ins .woocommerce-Price-amount {
+.product-price ins .woocommerce-Price-amount {
     color: red;
 }
 
-#ptx-single-price del .woocommerce-Price-amount {
+.product-price del .woocommerce-Price-amount {
     color: #000000;
 }
 
 .atc-product-image {
     width: 25%;
     margin: 0 auto;
+}
+
+.cart-upsell-product {
+    width: 50%;
+    float: left;
+}
+.upsell-product-main {
+    display: flex;
+    align-items: center;
+}
+.upsell-product-image {
+    width: 50%;
+}
+@media screen and (max-width: 768px) {
+    .cart-upsell-product {
+        width: 100%;
+        float: left;
+    }
 }

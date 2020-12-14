@@ -22,8 +22,10 @@ function pveser_theme_scripts()
 
 //	if(!is_product()){
     wp_enqueue_script('custom', __THEME_HOST.'/assets/js/custom.js', array(), false, true);
-    if(is_product())
-        wp_enqueue_script('custom-single', __THEME_HOST.'/assets/js/page/woosingle.js', array(), false, true);
+    if(is_product()) {
+        wp_enqueue_script('custom-single', __THEME_HOST . '/assets/js/page/woosingle.js', array(), false, true);
+        wp_enqueue_script('upsell-custom-single', __THEME_HOST.'/assets/js/page/upsellproduct.js', array(), false, true);
+    }
 //    }else{
 //        wp_enqueue_script('custom-woo-single', __THEME_HOST.'/assets/js/page/woosingle.js', array(), false, true);
 //    }

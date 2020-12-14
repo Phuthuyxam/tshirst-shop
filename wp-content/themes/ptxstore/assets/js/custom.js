@@ -185,7 +185,7 @@ jQuery(document).ready(function() {
                     alert("Add to cart error please try again");
                     location.reload();
                 }else{
-                    var image = jQuery('.product-image').html();
+                    var image = jQuery(this).parents('.product-wrapper').find('.product-image').html();
                     jQuery('.atc-product-image').html(image);
                     jQuery('#productModal').modal('hide');
                     jQuery('#addToCart').modal('show');
@@ -198,14 +198,14 @@ jQuery(document).ready(function() {
 
     })
 
-    jQuery('.product-quantity-select button.plus').click(function(){
+    jQuery('body').on('click','.product-quantity-select button.plus',function(){
         var val = jQuery(this).parents('.product-quantity-select').find('.quantity').text();
         jQuery(this).parents('.product-quantity-list').find('.quantity').text(parseInt(val) + 1);
         jQuery(this).parents('.product-quantity-select').find('.minus').removeClass('disabled');
         updateQuantity();
     })
 
-    jQuery('.product-quantity-select button.minus').click(function(){
+    jQuery('body').on('click','.product-quantity-select button.minus',function(){
         var val = jQuery(this).parents('.product-quantity-select').find('.quantity').text();
         if (val > 1){
             jQuery(this).parents('.product-quantity-list').find('.quantity').text(parseInt(val) - 1);
@@ -445,37 +445,37 @@ jQuery('#addToCart').on('hidden.bs.modal', function () {
 
 // count down
 // Set the date we're counting down to
-Date.prototype.addHours= function(h){
-    this.setHours(this.getHours()+h);
-    return this;
-}
-var countDownDate = new Date().addHours(7).getTime();
-
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-    // Get today's date and time
-    var now = new Date().getTime();
-
-    // Find the distance between now and the count down date
-    var distance = countDownDate - now;
-
-    // Time calculations for days, hours, minutes and seconds
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Display the result in the element with id="demo"
-    document.getElementById("time").innerHTML = hours + ":"
-        + minutes + ":" + seconds;
-
-    // If the count down is finished, write some text
-    if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("time").innerHTML = "EXPIRED";
+if(jQuery('.ptx-time-count-down').length > 0) {
+    Date.prototype.addHours = function (h) {
+        this.setHours(this.getHours() + h);
+        return this;
     }
-}, 1000);
+    var countDownDate = new Date().addHours(7).getTime();
 
+    // Update the count down every 1 second
+    var x = setInterval(function () {
 
+        // Get today's date and time
+        var now = new Date().getTime();
 
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the result in the element with id="demo"
+        document.getElementById("time").innerHTML = hours + ":"
+            + minutes + ":" + seconds;
+
+        // If the count down is finished, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("time").innerHTML = "EXPIRED";
+        }
+    }, 1000);
+
+}

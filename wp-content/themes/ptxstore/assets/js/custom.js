@@ -168,6 +168,7 @@ jQuery(document).ready(function() {
         var quatity = jQuery('#inQty').val();
         var  size = jQuery('#sizeSelect').val();
         var color = jQuery('#colorSelect').val();
+        var self = jQuery(this);
         jQuery.ajax({
             type: "POST",
             url: mainUrl + '/wp-admin/admin-ajax.php',
@@ -185,7 +186,7 @@ jQuery(document).ready(function() {
                     alert("Add to cart error please try again");
                     location.reload();
                 }else{
-                    var image = jQuery(this).parents('.product-wrapper').find('.product-image').html();
+                    var image = self.parents('.product-wrapper').find('.product-image').html();
                     jQuery('.atc-product-image').html(image);
                     jQuery('#productModal').modal('hide');
                     jQuery('#addToCart').modal('show');
@@ -366,7 +367,7 @@ function setValueInput() {
                 jQuery('#colorSelect').val(color);
                 jQuery('#inVariable').val(result.variation_id);
                 // setColorList(result,jQuery('#productModal').find('.product-color-select'));
-                setListSize(result,jQuery('#productModal .product-size-select ul'));
+                setListSize(result,jQuery('#productModal .product-size-select ul'), size);
                 setPrice(result,jQuery('#productModal').find('.product-price'));
                 setImage(result,jQuery('#productModal').find('.product-image img'));
             }).catch(error => {
@@ -417,12 +418,14 @@ function setListImages(data, parent) {
     parent.html(html);
 }
 
-function setListSize(data, parent) {
+function setListSize(data, parent, selectData) {
+    if(selectData === undefined) {
+        selectData = false;
+    }
     var html = "";
     if( data.attributes.all_size  && data.attributes.all_size.length > 0 ) {
         data.attributes.all_size.forEach(function (item, key) {
-
-            html += `<li class="fw-bold `+(key == 0 ? 'active':'')+`" data-name="`+ item.toLowerCase() +`">`+ item +`</li>`;
+            html += `<li class="fw-bold `+( ( !selectData && key === 0 ) ? 'active' : (selectData === item.toLowerCase()) ? 'active' : '' )+`" data-name="`+ item.toLowerCase() +`">`+ item +`</li>`;
         });
     }else{
         html += `<li class="fw-bold active" data-name="`+ data.attributes.attribute_pa_size.toLowerCase() +`">`+ data.attributes.attribute_pa_size.toUpperCase() +`</li>`;

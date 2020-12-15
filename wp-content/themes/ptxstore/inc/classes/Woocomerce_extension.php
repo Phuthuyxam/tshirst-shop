@@ -147,6 +147,43 @@ class Woocomerce_extension
         return $recommendProducts;
     }
 
+    public function renderRecommendeQuery() {
+        $productJson = $_COOKIE['recommendedProduct'];
+        $recommendProducts = [];
+        try {
+            $viewedProducts = json_decode($productJson);
+            if(isset($viewedProducts) && !empty($viewedProducts)) {
+                $terms = [];
+                foreach ($viewedProducts as $pro) {
+                    $getTerm = get_the_terms($pro , 'product_cat', OBJECT , 'raw');
+                    $terms[] = $getTerm[0]->term_id;
+                }
+                $terms = array_unique($terms);
+                $query = new WP_Query(
+                    [
+                        'post_type' => 'product',
+                        'post_status' => 'publish',
+                        'posts_per_page' => 4,
+                        'tax_query' => array(
+                            array(
+                                'taxonomy' => 'product_cat',
+                                'field'    => 'term_id',
+                                'terms'    => $terms,
+                            ),
+                        ),
+                        'orderby' => 'rand',
+                    ]
+                );
+                $recommendProducts = $query;
+
+            }
+        } catch ( \Exception $e ) {
+
+        }
+
+        return $recommendProducts;
+    }
+
     // Get Woocommerce variation price based on product ID
     function get_variation_price_by_id($product_id, $variation_id){
         $currency_symbol = get_woocommerce_currency_symbol();
@@ -607,6 +644,23 @@ class Woocomerce_extension
         $content = ob_get_contents();
         ob_get_clean();
         return $content;
+    }
+
+    public function cartGetTermRelation() {
+        $currentCart = WC()->cart->get_cart();
+        $terms = [];
+        if(isset($currentCart) && !empty($currentCart)) {
+            foreach ($currentCart as $cartItem) {
+                $fiedlTax = get_field('product_upsell', $cartItem['product_id']);
+                if(!$fiedlTax) continue;
+                if(!empty($terms)) {
+                    $terms = array_merge($terms, $fiedlTax);
+                }else{
+                    $terms = $fiedlTax;
+                }
+            }
+        }
+        return array_unique($terms);
     }
 
 }

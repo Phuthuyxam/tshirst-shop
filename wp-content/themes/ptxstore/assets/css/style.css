@@ -1656,13 +1656,28 @@ li.show-less {
 .cart-upsell-product {
     width: 50%;
     float: left;
+    border: solid thin #dfe6e9;
+    border-radius: 0.25rem;
 }
 .upsell-product-main {
     display: flex;
     align-items: center;
+    padding: 20px;
 }
 .upsell-product-image {
     width: 50%;
+}
+.cart-upsell-product-content {
+    width: 50%;
+    padding: 15px;
+}
+.upsell-product-price {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.upsell-product-title {
+    padding: 20px;
+    border-bottom: solid thin #dfe6e9;
 }
 @media screen and (max-width: 768px) {
     .cart-upsell-product {

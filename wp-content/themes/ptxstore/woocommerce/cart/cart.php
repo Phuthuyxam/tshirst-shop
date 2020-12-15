@@ -16,7 +16,7 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-
+global $wooextension;
 ?>
 <div class="ptx-cart-page">
     <div class="container custom-container" style="margin-top: 50px">
@@ -166,7 +166,6 @@ defined( 'ABSPATH' ) || exit;
         <?php do_action( 'woocommerce_before_cart_collaterals' ); ?>
 
         <div class="cart-collaterals" style="padding: 15px">
-
             <?php
                 $cartItem = WC()->cart->get_cart();
                 if(!empty($cartItem)):
@@ -201,17 +200,19 @@ defined( 'ABSPATH' ) || exit;
                                     <img src="<?php echo get_the_post_thumbnail_url($productUpsell) ?>" alt="upsell prouduct">
                                 </div>
                                 <div class="cart-upsell-product-content">
-                                    <div class="upsell-product-title">
+                                    <div class="cart-upsell-product-title">
                                         <h3>
                                             <?php echo get_the_title($productUpsell) ?>
                                         </h3>
                                     </div>
-                                    <div class="upsell-product-price">
+                                    <div class="upsell-product-price product-price">
                                         <?php echo $getProduct->get_price_html() ?>
                                     </div>
-                                    <div class="upsell-product-addcart">
-                                        <button class="btn fw-bold" id="ptx-single-add-cart" style="width: 100%" >Add to cart</button>
-
+                                    <div class="btn-add-cart" style="margin: 0px">
+                                        <?php
+                                        $dataProduct = ($getProduct->is_type( 'variable' )) ? $wooextension->genDataProductClass($getProduct->get_id()) : false ;
+                                        ?>
+                                        <button class="btn btn-primary fw-bold" data-product='<?php echo $dataProduct ?>' data-id="<?php echo $getProduct->get_id() ?>" <?php if(!($getProduct->is_type( 'variable' ))): ?> data-addcart="<?php echo wc_get_cart_url() . "?add-to-cart=". $getProduct->get_id() ?>" <?php endif; ?>>Add to cart</button>
                                     </div>
                                 </div>
 
@@ -230,5 +231,62 @@ defined( 'ABSPATH' ) || exit;
         </div>
 
         <?php do_action( 'woocommerce_after_cart' ); ?>
+
+        <?php
+            $loadTerms = $wooextension->cartGetTermRelation();
+            if($loadTerms && !empty($loadTerms)):
+        ?>
+            <div class="cart-more-product">
+                <?php
+                    foreach ($loadTerms as $termRela):
+                        $getTerm = get_term_by('id', $termRela , 'product_cat', OBJECT , 'raw');
+                    ?>
+                    <div class="recommend-wrapper">
+
+                        <div class="recommend-heading">
+                            <h2 class="fs-lg fw-bold">More From <a href="<?php echo get_term_link($termRela , 'product_cat') ?>"> <?php echo $getTerm->name ?> </a></h2>
+                        </div>
+                        <?php
+                            $query = new WP_Query(['post_type' => 'product' , 'post_status' => 'publish', 'posts_per_page' => 3, 'tax_query' => [ ['taxonomy' => 'product_cat' , 'field' => 'term_id' , 'terms' => $termRela] ] ]);
+                            if($query->have_posts()):
+                        ?>
+                        <div class="recommend-content">
+                            <div class="row">
+                            <?php while ($query->have_posts()) {
+                                $query->the_post();
+                                wc_get_template_part( 'content', 'product' );
+                            } ?>
+                            </div>
+                        </div>
+                        <?php endif; wp_reset_query(); ?>
+
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+
+        <?php
+        $recommendedProduct = $wooextension->renderRecommendeQuery();
+        if($recommendedProduct->have_posts()): ?>
+            <div class="recommend-wrapper">
+
+                <div class="recommend-heading">
+                    <h2 class="fs-lg fw-bold">Recommended For You</h2>
+                </div>
+
+                <div class="recommend-content">
+                    <div class="row">
+                        <?php while ($recommendedProduct->have_posts()) {
+                            $recommendedProduct->the_post();
+                            wc_get_template_part( 'content', 'product' );
+                        } ?>
+                    </div>
+                </div>
+
+            </div>
+        <?php endif; wp_reset_query(); ?>
+
     </div>
+    <?php wc_get_template_part( 'content', 'popup-add-cart' ); ?>
 </div>

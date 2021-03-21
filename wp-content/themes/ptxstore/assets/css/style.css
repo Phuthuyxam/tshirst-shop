@@ -1701,7 +1701,10 @@ li.show-less {
     }
     .social-mobile {
         display: flex !important;
-        justify-content: space-between !important;
+        /*justify-content: space-between !important;*/
+    }
+    .social-mobile .fa {
+        margin-right: 15px;
     }
 }
 
@@ -1710,4 +1713,7 @@ li.show-less {
 }
 .recommend-content .products {
     padding-right: 20px;
+}
+.payment_method_cod {
+    display: none;
 }

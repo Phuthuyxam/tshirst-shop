@@ -1,10 +1,9 @@
 <?php
 function dashboard_widget_function( $post, $callback_args ) {
     echo '<p style="font-weight: bold; color: red;">Mọi hỗ trợ về kỹ thuật bạn vui lòng liên hệ qua:</p>';
-    echo '<p>- Facebook: https://www.facebook.com/hoanganit</p>';
-    echo '<p>- Skype: friendntt10</p>';
-    echo '<p>- Điện thoại: 01688875179</p>';
-    echo '<p>- Email: hoangan.web@gmail.com hoặc hoanganit19@gmail.com</p>';
+    echo '<p>- Skype: phuthuyxam@outlook.com.vn</p>';
+    echo '<p>- Email: phamphucit88@gmail.com</p>';
+    echo '<p>- Telegram: @phuthuyxam</p>';
 }
 
 // Function used in the action hook

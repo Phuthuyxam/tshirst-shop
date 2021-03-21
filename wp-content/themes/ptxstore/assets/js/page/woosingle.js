@@ -1,5 +1,27 @@
 // set default value
+const htmlImg = jQuery('#gal1').html();
+function setImageVariation(img) {
 
+    var order = jQuery('#gal1 a').last().attr('data-order');
+
+    var html = htmlImg + `<a href="#" class="active" data-image="`+ img +`" data-zoom-image="`+ img +`" data-order="`+ parseInt(order) + 1 +`">
+                 <img id="img_`+ order +`" src="`+ img +`" />
+            </a>`;
+
+    console.log("adadad");
+    jQuery('#gal1').html(html);
+
+    if(jQuery('#zoom_03').length > 0) {
+        jQuery('#zoom_03').attr('src',img);
+        // jQuery('#zoom_03').attr('data-zoom-image',img);
+        jQuery("#zoom_03").data('zoom-image', img).elevateZoom({
+            gallery: 'gal1',
+            cursor: 'pointer',
+            galleryActiveClass: 'active',
+            imageCrossfade: true
+        });
+    }
+}
 function setDefaultValue() {
     var dataProduct = jQuery('#ptx-single-add-cart').attr('data-product');
     if(dataProduct) {
@@ -27,8 +49,29 @@ function setDefaultValue() {
                 jQuery('#ptx-single-price').html(validate.price_html);
             }
 
+            let img = validate.image.full_src;
 
-            setImageVariation(validate.image.full_src);
+            var order = jQuery('#gal1 a').last().attr('data-order');
+
+            var html = htmlImg + `<a href="#" class="active" data-image="`+ img +`" data-zoom-image="`+ img +`" data-order="`+ parseInt(order) + 1 +`">
+                 <img id="img_`+ order +`" src="`+ img +`" />
+            </a>`;
+
+            console.log("adadad");
+            jQuery('#gal1').html(html);
+
+            if(jQuery('#zoom_03').length > 0) {
+                jQuery('#zoom_03').attr('src',img);
+                // jQuery('#zoom_03').attr('data-zoom-image',img);
+                jQuery("#zoom_03").data('zoom-image', img).elevateZoom({
+                    gallery: 'gal1',
+                    cursor: 'pointer',
+                    galleryActiveClass: 'active',
+                    imageCrossfade: true
+                });
+            }
+
+
             jQuery('#ptx-single-size').val(size);
             jQuery('#ptx-single-color').val(color);
             jQuery('#ptx-single-avatar').val(validate.image.full_src);
@@ -37,30 +80,6 @@ function setDefaultValue() {
         }
 
     }
-
-}
-const htmlImg = jQuery('#gal1').html();
-function setImageVariation(img) {
-
-    var order = jQuery('#gal1 a').last().attr('data-order');
-
-    var html = htmlImg + `<a href="#" class="active" data-image="`+ img +`" data-zoom-image="`+ img +`" data-order="`+ parseInt(order) + 1 +`">
-                 <img id="img_`+ order +`" src="`+ img +`" />
-            </a>`;
-    jQuery('#gal1').html(html);
-
-    if(jQuery('#zoom_03').length > 0) {
-        jQuery('#zoom_03').attr('src',img);
-        // jQuery('#zoom_03').attr('data-zoom-image',img);
-        jQuery("#zoom_03").data('zoom-image', img).elevateZoom({
-            gallery: 'gal1',
-            cursor: 'pointer',
-            galleryActiveClass: 'active',
-            imageCrossfade: true
-        });
-    }
-
-
 
 }
 

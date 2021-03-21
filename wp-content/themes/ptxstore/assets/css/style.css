@@ -1700,8 +1700,8 @@ li.show-less {
         padding-right: 15px;
     }
     .social-mobile {
-        display: flex;
-        justify-content: space-between;
+        display: flex !important;
+        justify-content: space-between !important;
     }
 }
 

@@ -446,7 +446,10 @@ class Woocomerce_setup
                 });
 
                 jQuery('.ptx-form').on('change', function () {
-                    jQuery(this).parents('.ptx-form-row').find('label').css('transform', 'translateY(-50%)');
+                    var value = jQuery(this).val();
+                    if (value == "") {
+                        jQuery(this).parents('.ptx-form-row').find('label').css('transform', 'translateY(-50%)');
+                    }
                 });
 
                 jQuery('.ptx-form').on('focus', function () {

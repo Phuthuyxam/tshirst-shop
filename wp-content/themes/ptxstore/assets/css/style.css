@@ -1370,6 +1370,11 @@ li.show-less {
         padding: 1rem;
         font-size: 19px;
     }
+    .cart-icon {
+        margin-right: 15px;
+        padding: 0px;
+        font-size: 19px;
+    }
     .banner-wrapper{
         border-radius: unset;
         margin-top: 0;
@@ -1684,4 +1689,17 @@ li.show-less {
         width: 100%;
         float: left;
     }
+    #billing_apt_suite_field, #billing_postcode_field, #ptxpayment_debit_card_cvv_field {
+        width: 100% !important;
+    }
+    #billing_address_1_field, #billing_state_field, #ptxpayment_debit_card_date_field {
+        width: 100% !important;
+    }
+}
+
+.cart-more-product {
+    padding: 15px;
+}
+.recommend-content .products {
+    padding-right: 20px;
 }

@@ -46,7 +46,7 @@ defined( 'ABSPATH' ) || exit;
     if(isset($checkoutField['billing']['billing_country']) && !empty($checkoutField['billing']['billing_country'])) :
         ?>
         <span>
-            Country: <b class="country-current-choose">Việt Nam</b> <b class="action-change-country" style="color:#0291d6; cursor: pointer">(Change)</b>
+            Country: <b class="country-current-choose">United States(US)</b> <b class="action-change-country" style="color:#0291d6; cursor: pointer">(Change)</b>
         </span>
     <?php endif; ?>
 	<?php do_action( 'woocommerce_after_checkout_billing_form', $checkout ); ?>

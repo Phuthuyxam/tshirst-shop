@@ -3460,23 +3460,23 @@ DROP TABLE IF EXISTS `wp_yoast_indexable`;
 
 CREATE TABLE `wp_yoast_indexable` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `permalink` longtext COLLATE utf8mb4_unicode_520_ci,
-  `permalink_hash` varchar(40) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `permalink` longtext COLLATE utf8mb4_unicode_ci,
+  `permalink_hash` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `object_id` int(11) unsigned DEFAULT NULL,
-  `object_type` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `object_sub_type` varchar(32) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `object_type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `object_sub_type` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `author_id` int(11) unsigned DEFAULT NULL,
   `post_parent` int(11) unsigned DEFAULT NULL,
-  `title` text COLLATE utf8mb4_unicode_520_ci,
-  `description` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `breadcrumb_title` text COLLATE utf8mb4_unicode_520_ci,
-  `post_status` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci,
+  `description` mediumtext COLLATE utf8mb4_unicode_ci,
+  `breadcrumb_title` text COLLATE utf8mb4_unicode_ci,
+  `post_status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_public` tinyint(1) DEFAULT NULL,
   `is_protected` tinyint(1) DEFAULT '0',
   `has_public_posts` tinyint(1) DEFAULT NULL,
   `number_of_pages` int(11) unsigned DEFAULT NULL,
-  `canonical` longtext COLLATE utf8mb4_unicode_520_ci,
-  `primary_focus_keyword` varchar(191) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `canonical` longtext COLLATE utf8mb4_unicode_ci,
+  `primary_focus_keyword` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `primary_focus_keyword_score` int(3) DEFAULT NULL,
   `readability_score` int(3) DEFAULT NULL,
   `is_cornerstone` tinyint(1) DEFAULT '0',
@@ -3485,27 +3485,27 @@ CREATE TABLE `wp_yoast_indexable` (
   `is_robots_noarchive` tinyint(1) DEFAULT '0',
   `is_robots_noimageindex` tinyint(1) DEFAULT '0',
   `is_robots_nosnippet` tinyint(1) DEFAULT '0',
-  `twitter_title` text COLLATE utf8mb4_unicode_520_ci,
-  `twitter_image` longtext COLLATE utf8mb4_unicode_520_ci,
-  `twitter_description` longtext COLLATE utf8mb4_unicode_520_ci,
-  `twitter_image_id` varchar(191) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `twitter_image_source` text COLLATE utf8mb4_unicode_520_ci,
-  `open_graph_title` text COLLATE utf8mb4_unicode_520_ci,
-  `open_graph_description` longtext COLLATE utf8mb4_unicode_520_ci,
-  `open_graph_image` longtext COLLATE utf8mb4_unicode_520_ci,
-  `open_graph_image_id` varchar(191) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `open_graph_image_source` text COLLATE utf8mb4_unicode_520_ci,
-  `open_graph_image_meta` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `twitter_title` text COLLATE utf8mb4_unicode_ci,
+  `twitter_image` longtext COLLATE utf8mb4_unicode_ci,
+  `twitter_description` longtext COLLATE utf8mb4_unicode_ci,
+  `twitter_image_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `twitter_image_source` text COLLATE utf8mb4_unicode_ci,
+  `open_graph_title` text COLLATE utf8mb4_unicode_ci,
+  `open_graph_description` longtext COLLATE utf8mb4_unicode_ci,
+  `open_graph_image` longtext COLLATE utf8mb4_unicode_ci,
+  `open_graph_image_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `open_graph_image_source` text COLLATE utf8mb4_unicode_ci,
+  `open_graph_image_meta` mediumtext COLLATE utf8mb4_unicode_ci,
   `link_count` int(11) DEFAULT NULL,
   `incoming_link_count` int(11) DEFAULT NULL,
   `prominent_words_version` int(11) unsigned DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `blog_id` bigint(20) NOT NULL DEFAULT '1',
-  `language` varchar(32) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `region` varchar(32) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `schema_page_type` varchar(64) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `schema_article_type` varchar(64) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `language` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `schema_page_type` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `schema_article_type` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `has_ancestors` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `object_type_and_sub_type` (`object_type`,`object_sub_type`),
@@ -3513,7 +3513,7 @@ CREATE TABLE `wp_yoast_indexable` (
   KEY `permalink_hash_and_object_type` (`permalink_hash`,`object_type`),
   KEY `subpages` (`post_parent`,`object_type`,`post_status`,`object_id`),
   KEY `prominent_words` (`prominent_words_version`,`object_type`,`object_sub_type`,`post_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `wp_yoast_indexable` WRITE;
 /*!40000 ALTER TABLE `wp_yoast_indexable` DISABLE KEYS */;
@@ -3568,7 +3568,7 @@ CREATE TABLE `wp_yoast_indexable_hierarchy` (
   KEY `indexable_id` (`indexable_id`),
   KEY `ancestor_id` (`ancestor_id`),
   KEY `depth` (`depth`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 
@@ -3579,10 +3579,10 @@ DROP TABLE IF EXISTS `wp_yoast_migrations`;
 
 CREATE TABLE `wp_yoast_migrations` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `version` varchar(191) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `version` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `wp_yoast_migrations_version` (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `wp_yoast_migrations` WRITE;
 /*!40000 ALTER TABLE `wp_yoast_migrations` DISABLE KEYS */;
@@ -3621,14 +3621,14 @@ CREATE TABLE `wp_yoast_primary_term` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `post_id` int(11) unsigned NOT NULL,
   `term_id` int(11) unsigned NOT NULL,
-  `taxonomy` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `taxonomy` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `blog_id` bigint(20) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `post_taxonomy` (`post_id`,`taxonomy`),
   KEY `post_term` (`post_id`,`term_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 

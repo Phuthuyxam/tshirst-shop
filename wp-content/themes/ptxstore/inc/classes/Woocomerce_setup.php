@@ -456,6 +456,8 @@ class Woocomerce_setup
                     jQuery(this).parents('.ptx-form-row').find('label').css('transform', 'scale(.8) translateY(-2.2rem)');
                 });
 
+                jQuery('#billing_country').val('US');
+
                 jQuery('.country-current-choose').html(jQuery('#billing_country :selected').text());
                 jQuery('.action-change-country').on('click', function () {
                     jQuery(this).parents('span').hide();

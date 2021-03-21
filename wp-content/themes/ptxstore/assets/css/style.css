@@ -1695,6 +1695,10 @@ li.show-less {
     #billing_address_1_field, #billing_state_field, #ptxpayment_debit_card_date_field {
         width: 100% !important;
     }
+
+    .category-product-list .products:nth-child(2n) {
+        padding-right: 15px;
+    }
 }
 
 .cart-more-product {

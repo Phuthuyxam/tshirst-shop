@@ -1699,6 +1699,10 @@ li.show-less {
     .category-product-list .products:nth-child(2n) {
         padding-right: 15px;
     }
+    .social-mobile {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 .cart-more-product {

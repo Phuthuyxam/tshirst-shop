@@ -688,4 +688,5 @@ function allow_contributor_uploads() {
 //    $cols = 2;
 //    return $cols;
 //}
+add_filter('woocommerce_show_variation_price', function() {return true;});
 ?>

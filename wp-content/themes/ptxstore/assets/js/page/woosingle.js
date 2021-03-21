@@ -21,7 +21,13 @@ function setDefaultValue() {
             jQuery('#ptx-product-color-select ul li').removeClass('ptx-validate-color-error');
             jQuery('#ptx-single-add-cart').prop('disabled', false);
             // set value
-            jQuery('#ptx-single-price').html(validate.price_html);
+            if(validate.price_html.length === 0) {
+                let price_html_build = '';
+            } else {
+                jQuery('#ptx-single-price').html(validate.price_html);
+            }
+
+
             setImageVariation(validate.image.full_src);
             jQuery('#ptx-single-size').val(size);
             jQuery('#ptx-single-color').val(color);
@@ -120,7 +126,6 @@ jQuery('#ptx-single-add-cart').click(function () {
         },
         dataType: 'json',
         success: function (data){
-            console.log(data);
             if(data.error) {
                 alert("Add to cart error please try again");
                 location.reload();

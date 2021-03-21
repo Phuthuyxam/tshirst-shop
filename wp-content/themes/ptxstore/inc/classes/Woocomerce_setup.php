@@ -445,6 +445,8 @@ class Woocomerce_setup
                     }
                 });
 
+                jQuery('#billing_address_1').attr('placeholder' , '');
+
                 jQuery('.ptx-form').on('change', function () {
                     var value = jQuery(this).val();
                     if (value == "") {

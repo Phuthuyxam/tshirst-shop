@@ -1732,11 +1732,12 @@ li.show-less {
 :-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #fff;
 }
+@media screen and (min-width: 992px) {
+    .item-wrapper {
+        min-height: 335px;
+    }
 
-.item-wrapper {
-    min-height: 335px;
-}
-
-.item-thumb {
-    min-height: 280px;
+    .item-thumb {
+        min-height: 280px;
+    }
 }

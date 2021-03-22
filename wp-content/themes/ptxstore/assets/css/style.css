@@ -1732,3 +1732,7 @@ li.show-less {
 :-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #fff;
 }
+
+.item-wrapper {
+    min-height: 335px;
+}

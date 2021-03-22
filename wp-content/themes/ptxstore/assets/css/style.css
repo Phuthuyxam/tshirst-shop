@@ -1732,6 +1732,7 @@ li.show-less {
 :-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #fff;
 }
+
 @media screen and (min-width: 992px) {
     .item-wrapper {
         min-height: 335px;
@@ -1739,5 +1740,15 @@ li.show-less {
 
     .item-thumb {
         min-height: 280px;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .item-wrapper {
+        min-height: 360px;
+    }
+
+    .item-thumb {
+        min-height: 305px;
     }
 }

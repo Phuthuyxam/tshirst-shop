@@ -1736,3 +1736,7 @@ li.show-less {
 .item-wrapper {
     min-height: 335px;
 }
+
+.item-thumb {
+    min-height: 280px;
+}

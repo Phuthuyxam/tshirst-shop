@@ -20,9 +20,9 @@ class Woocomerce_setup
 
         add_action( 'woocommerce_after_checkout_billing_form', [$this, 'custom_checkout_fields_before_billing_details'] );
 
-        add_action( 'woocommerce_thankyou', [$this , 'kia_display_order_data'], 20 );
-
-        add_action( 'woocommerce_view_order',[$this, 'kia_display_order_data'], 20 );
+//        add_action( 'woocommerce_thankyou', [$this , 'kia_display_order_data'], 20 );
+//
+//        add_action( 'woocommerce_view_order',[$this, 'kia_display_order_data'], 20 );
 
         add_action( 'woocommerce_admin_order_data_after_order_details', [$this, 'kia_display_order_data_in_admin'] );
 

@@ -1752,3 +1752,13 @@ li.show-less {
         min-height: 305px;
     }
 }
+
+@media screen and (max-width: 767px){
+    .item-wrapper {
+        min-height: 255px;
+    }
+
+    .item-thumb {
+        min-height: 200px;
+    }
+}

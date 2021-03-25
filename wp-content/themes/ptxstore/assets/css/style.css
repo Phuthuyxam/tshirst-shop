@@ -1762,3 +1762,8 @@ li.show-less {
         min-height: 200px;
     }
 }
+
+.color-circle {
+    border: 1px solid #b2bec3;
+    border-radius: 100%;
+}
